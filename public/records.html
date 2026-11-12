@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/styles.css"><title>Intent Records . OryvaPay</title></head>
+<body>
+<main class="wrap">
+  <section class="hero"><h1>Intent <span>Records</span></h1><p>Every purchase leaves a tamper evident trail: what you asked for, what the agent picked, what the merchant charged, why OryvaPay allowed or blocked it, and what PayPal did with the money.</p></section>
+  <div class="stats" id="stats"></div>
+  <section class="card"><div id="list"><div class="empty">Loading...</div></div></section>
+  <div style="height:60px"></div>
+</main>
+<script type="module">
+import { $, esc, usd, when, api, header, footer } from '/common.js';
+await header('records'); footer();
+const recs = await api('GET', '/api/records');
+const n = s => recs.filter(r => r.status === s).length;
+const blockedAttempts = recs.reduce((s, r) => s + (r.status === 'BLOCKED' ? 1 : 0) + Math.max(0, r.attempts - 1), 0);
+$('#stats').innerHTML = [['Records', recs.length], ['Captured', n('CAPTURED')], ['Bad orders stopped', blockedAttempts], ['Awaiting you', n('AWAITING_APPROVAL')]].map(([l, v]) => `<div class="stat"><div class="n">${v}</div><div class="l">${l}</div></div>`).join('');
+$('#list').innerHTML = recs.length ? `<table class="recs"><thead><tr><th>Record</th><th>Request</th><th>Mode</th><th>Attempts</th><th>Status</th><th>Created</th></tr></thead><tbody>${recs.map(r => `<tr onclick="location.href='/record/${r.id}'"><td><code>${esc(r.id)}</code></td><td>${esc(r.request.length > 70 ? r.request.slice(0, 70) + '...' : r.request)}</td><td>${esc(r.mode)}</td><td>${r.attempts}</td><td><span class="status ${r.status}">${r.status.replace('_', ' ')}</span></td><td>${when(r.createdAt)}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">No records yet. <a href="/">Verify your first purchase</a>.</div>';
+</script>
+</body></html>

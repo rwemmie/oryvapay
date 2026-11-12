@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OryvaPay: verify intent before payment</title>
+<meta name="description" content="An independent AI verification layer that checks an AI shopping agent's order against what you asked for before PayPal captures the money.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <h1>Verify intent <span>before payment.</span></h1>
+    <p>Your AI shopping agent shouldn't be able to spend your money on something you never agreed to buy. OryvaPay holds the payment with PayPal, checks the order against what you actually asked for, and only then lets the money move.</p>
+    <div class="stepper" id="stepper"></div>
+  </section>
+
+  <div class="grid">
+    <div id="flow">
+      <!-- Step 1 -->
+      <section class="card active" id="s1">
+        <div class="hd"><span class="stepno">1</span><div><h2>Tell your agent what you want</h2><div class="sub">Plain English. AI turns it into rules the agent must follow.</div></div></div>
+        <div class="bd">
+          <label class="lbl" for="req">Your request</label>
+          <textarea id="req">Black running shoes, size 10, under $80, one pair, from StrideLab, no subscriptions, deliver by Friday</textarea>
+          <div class="chips" id="examples"></div>
+          <div class="row" style="margin-top:16px"><button class="btn primary" id="parseBtn">Turn into purchase rules</button></div>
+          <div id="consWrap" style="display:none" class="fade">
+            <div class="row" style="margin:22px 0 10px;justify-content:space-between"><b>Approved purchase constraints</b><span class="aitag" id="parsedBy"></span></div>
+            <div class="cons" id="cons"></div>
+            <div class="settings">
+              <div class="box">
+                <label class="lbl">Verification mode</label>
+                <div class="seg" id="modeSeg"><button data-m="strict" class="on">Strict</button><button data-m="flexible">Flexible</button><button data-m="approval">Approval</button></div>
+                <div class="hint" id="modeHint"></div>
+                <div id="tolWrap" style="display:none;margin-top:10px"><label class="lbl" for="tol">Price tolerance (USD)</label><input type="number" id="tol" value="5" min="0" step="0.5"></div>
+              </div>
+              <div class="box">
+                <label class="lbl" for="scenario">Demo: what does the agent sneak in?</label>
+                <select id="scenario"></select>
+                <div class="hint">Simulates a real failure so you can watch OryvaPay catch it.</div>
+              </div>
+            </div>
+            <div class="row" style="margin-top:18px"><button class="btn primary" id="shopBtn">Approve rules and send the agent shopping</button></div>
+          </div>
+          <div class="err" id="err1"></div>
+        </div>
+      </section>
+
+      <!-- Step 2 -->
+      <section class="card locked" id="s2">
+        <div class="hd"><span class="stepno">2</span><div><h2>Agent's cart and PayPal approval</h2><div class="sub">You approve a PayPal authorization. Money is held, not taken.</div></div><div class="spacer"></div><span class="pill" id="attemptPill"></span></div>
+        <div class="bd">
+          <ul class="agentlog" id="agentlog"></ul>
+          <div class="meta" id="cartMeta"></div>
+          <table class="items"><thead><tr><th>Item</th><th class="n">Qty</th><th class="n">Price</th><th class="n">Line total</th></tr></thead><tbody id="cartItems"></tbody></table>
+          <div class="totals"><table id="cartTotals"></table></div>
+          <div class="paybox" style="margin-top:18px">
+            <div class="txt"><b>Authorize with PayPal.</b> PayPal holds the funds. OryvaPay then compares the order PayPal received against your rules and either captures it or voids it.</div>
+            <div id="payArea"></div>
+          </div>
+          <div class="err" id="err2"></div>
+        </div>
+      </section>
+
+      <!-- Step 3 -->
+      <section class="card locked" id="s3">
+        <div class="hd"><span class="stepno">3</span><div><h2>OryvaPay verification</h2><div class="sub">Rule checks for the numbers, AI review for the meaning.</div></div></div>
+        <div class="bd" id="verifyBody"></div>
+      </section>
+    </div>
+
+    <aside class="side">
+      <section class="card">
+        <div class="hd"><h2>Live Intent Record</h2><div class="spacer"></div><a id="recLink" class="sub" href="#" style="display:none">Open</a></div>
+        <div class="bd">
+          <div id="chainBox"></div>
+          <ul class="timeline" id="timeline"><div class="empty">Every step is written here and sealed with a SHA-256 hash chain, so it can serve as evidence if there is ever a dispute.</div></ul>
+        </div>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<div class="modal" id="ppModal"><div class="ppwin">
+  <div class="bar"><span>&#128274;</span><span class="u" id="ppUrl">https://www.sandbox.paypal.com/checkoutnow</span></div>
+  <div class="in">
+    <div class="demoflag">Demo mode: simulated PayPal sandbox approval. Add PayPal keys to use the real sandbox.</div>
+    <div class="pplogo">Pay<span>Pal</span></div>
+    <div class="amt" id="ppAmt"></div><div class="hint" id="ppMerchant"></div>
+    <div id="ppLines" style="margin-top:12px"></div>
+    <div class="note">You are authorizing this payment. The merchant can only take it after OryvaPay verifies the order.</div>
+    <button class="ppbtn" id="ppApprove">Agree and Continue</button>
+    <button class="btn ghost" style="width:100%;margin-top:8px" id="ppCancel">Cancel</button>
+  </div>
+</div></div>
+
+<script type="module" src="/app.js"></script>
+</body>
+</html>
