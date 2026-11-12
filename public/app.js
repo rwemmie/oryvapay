@@ -1,4 +1,4 @@
-import { $, esc, usd, day, api, header, footer, eventLine } from './common.js';
+import { $, esc, usd, day, api, header, footer, eventLine, diffHTML, ICON } from './common.js';
 
 const EXAMPLES = [
   'Black running shoes, size 10, under $80, one pair, from StrideLab, no subscriptions, deliver by Friday',
@@ -29,7 +29,7 @@ async function resumeFromPayPal() {
     setRecord(await api('GET', `/api/records/${id}`));
     state.constraints = state.record.constraints; state.mode = state.record.mode;
     $('#req').value = state.record.request;
-    mark('#s1', 'done'); $('#s1 .hd .sub').textContent = `"${state.record.request}" . ${state.record.mode} mode`;
+    mark('#s1', 'done'); $('#s1 .hd .sub').textContent = `"${state.record.request}" · ${state.record.mode} mode`;
     unlock('#s2'); renderCart(); renderStepper(2);
     const a = state.record.attempts.at(-1);
     if (q.get('paypal') === 'approved' && a.status === 'ORDER_CREATED') await afterApproval();
@@ -75,7 +75,7 @@ function renderConstraints(c) {
     ['Service fees', yn(c.serviceFeesAllowed, 'Allowed', 'Not allowed')],
   ];
   $('#cons').innerHTML = items.map(([k, v]) => `<div class="con"><div class="k">${k}</div>${v}</div>`).join('');
-  $('#parsedBy').textContent = c.parsedBy === 'ai' ? `Parsed by AI (${cfg.aiModel})` : 'Parsed by local heuristic (demo mode)';
+  $('#parsedBy').textContent = c.parsedBy === 'ai' ? `Parsed by AI · ${cfg.aiModel}` : 'Parsed locally (demo mode)';
   $('#consWrap').style.display = 'block';
 }
 
@@ -85,7 +85,7 @@ $('#shopBtn').addEventListener('click', e => busy(e.currentTarget, 'Agent is sho
     const rec = await api('POST', '/api/records', { request: $('#req').value, constraints: state.constraints, mode: state.mode, tolerance: Number($('#tol').value || 0), scenario: $('#scenario').value });
     setRecord(rec);
     mark('#s1', 'done'); unlock('#s2'); lock('#s3');
-    $('#s1 .hd .sub').textContent = `"${$('#req').value}" . ${state.mode} mode`;
+    $('#s1 .hd .sub').textContent = `"${$('#req').value}" · ${state.mode} mode`;
     $('#s1').addEventListener('click', () => $('#s1').classList.remove('done'), { once: true });
     renderCart();
     renderStepper(2);
@@ -105,7 +105,7 @@ function renderCart() {
   $('#cartItems').innerHTML = c.items.map(it => {
     const tag = it.kind === 'subscription' ? '<span class="tag sub">Recurring</span>' : it.kind === 'warranty' ? '<span class="tag war">Add-on</span>' : '';
     const price = it.chargedUnitPrice ?? it.unitPrice;
-    return `<tr><td><div class="nm">${esc(it.name)}${tag}</div><div class="ds">${esc(it.description || '')} . SKU ${esc(it.sku)}</div></td><td class="n">${it.quantity}</td><td class="n">${usd(price)}</td><td class="n">${usd(price * it.quantity)}</td></tr>`;
+    return `<tr><td><div class="nm">${esc(it.name)}${tag}</div><div class="ds">${esc(it.description || '')} · SKU ${esc(it.sku)}</div></td><td class="n">${it.quantity}</td><td class="n">${usd(price)}</td><td class="n">${usd(price * it.quantity)}</td></tr>`;
   }).join('');
   const itemsTotal = c.items.reduce((s, i) => s + (i.chargedUnitPrice ?? i.unitPrice) * i.quantity, 0);
   $('#cartTotals').innerHTML = `<tr><td>Items</td><td>${usd(itemsTotal)}</td></tr><tr><td>Shipping</td><td>${c.shipping.price ? usd(c.shipping.price) : 'Free'}</td></tr>${c.serviceFee ? `<tr><td>${esc(c.serviceFee.label)}</td><td>${usd(c.serviceFee.amount)}</td></tr>` : ''}<tr class="grand"><td>Total</td><td>${usd(a.cartTotal)}</td></tr>`;
@@ -171,11 +171,18 @@ async function afterApproval() {
     await refresh();
     mark('#s2', 'done'); unlock('#s3'); renderStepper(3);
     const a = state.record.attempts.at(-1);
+    const steps = ['Reading the order PayPal received', 'Hidden fees, add-ons and surprise subscriptions', 'Price change after approval and delivery terms', 'Quantity, merchant and budget', 'AI review: does the product match what you asked for?'];
     $('#verifyBody').innerHTML = `<div class="scan fade">
-      <div class="ln"><span class="tag" style="background:var(--okbg);color:var(--ok)">AUTHORIZED</span> PayPal authorization <code>${esc(a.authorizationId)}</code> for ${usd(a.authorization.amount.value)}. Funds are held, nothing captured.</div>
-      ${['Reading the order PayPal received', 'Checking quantity, fees, subscriptions, add-ons', 'Checking merchant, delivery date, price changes, budget', 'AI review: does the product match what you asked for?'].map(t => `<div class="ln"><span class="spin"></span>${t}</div>`).join('')}</div>`;
+      <div class="head">${ICON.lock.replace('<svg', '<svg width="18" height="18"')}<span><b>Authorized, not captured.</b> PayPal authorization <code>${esc(a.authorizationId)}</code> holds ${usd(a.authorization.amount.value)}.</span></div>
+      ${steps.map((t, i) => `<div class="ln ${i ? 'queued' : 'wait'}" data-i="${i}"><span class="ic"></span>${t}</div>`).join('')}</div>`;
     $('#s3').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    const [rec] = await Promise.all([api('POST', `/api/records/${state.record.id}/verify`), new Promise(r => setTimeout(r, 1600))]);
+    const tick = i => { const el = $(`.scan .ln[data-i="${i}"]`); if (!el) return; el.className = 'ln done'; el.querySelector('.ic').innerHTML = '&#10003;'; const nx = $(`.scan .ln[data-i="${i + 1}"]`); if (nx) nx.className = 'ln wait'; };
+    let i = 0; const timer = setInterval(() => { if (i < steps.length - 1) tick(i++); }, 380);
+    let rec;
+    try { [rec] = await Promise.all([api('POST', `/api/records/${state.record.id}/verify`), new Promise(r => setTimeout(r, 2000))]); }
+    finally { clearInterval(timer); }
+    for (; i < steps.length; i++) tick(i);
+    await new Promise(r => setTimeout(r, 300));
     setRecord(rec);
     renderVerdict();
   } catch (err) { showErr('#err2', err); }
@@ -185,20 +192,24 @@ function renderVerdict() {
   const r = state.record;
   const a = r.attempts.at(-1);
   const v = a.verification;
-  const icon = { PASS: '&#10003;', BLOCK: '&#10005;', NEEDS_APPROVAL: '!' }[v.verdict];
+  const icon = { PASS: '&#10003;', BLOCK: '&#10005;', NEEDS_APPROVAL: '?' }[v.verdict];
+  const label = { PASS: 'Verdict · Pass', BLOCK: 'Verdict · Block', NEEDS_APPROVAL: 'Verdict · Review' }[v.verdict];
   const checks = [...v.checks].sort((x, y) => ({ fail: 0, warn: 1, pass: 2 }[x.status] - { fail: 0, warn: 1, pass: 2 }[y.status]));
   let outcome = '';
-  if (a.status === 'CAPTURED') outcome = `<div class="outcome" style="background:var(--okbg);border-color:#bfe8d3"><div class="txt"><b>Payment captured: ${usd(a.finalEvent?.amount?.value)}</b><div class="hint">Capture ID <code>${esc(a.captureId)}</code>. The Intent Record is sealed.</div></div><a class="btn ok" href="/record/${r.id}">View Intent Record</a><a class="btn ghost" href="/record/${r.id}/evidence" target="_blank">Evidence Pack</a><button class="btn ghost" onclick="location.reload()">New purchase</button></div>`;
-  else if (a.status === 'VOIDED') outcome = `<div class="outcome" style="background:var(--badbg);border-color:#f6c5c7"><div class="txt"><b>Authorization voided. ${usd(a.authorization?.amount?.value)} released back to you.</b><div class="hint">Nothing was charged. Ask the agent to fix the order, and you will approve the corrected one.</div></div><button class="btn primary" id="fixBtn">Fix order</button><a class="btn ghost" href="/record/${r.id}/evidence" target="_blank">Evidence Pack</a></div>`;
-  else if (a.status === 'AWAITING_APPROVAL') outcome = `<div class="outcome" style="background:var(--warnbg);border-color:#f3dca5"><div class="txt"><b>Your call.</b><div class="hint">Funds are still only authorized. Approve to capture anyway, or reject to void.</div></div><button class="btn ok" id="apBtn">Approve and pay</button><button class="btn bad" id="rjBtn">Reject and void</button></div>`;
+  if (a.status === 'CAPTURED') outcome = `<div class="outcome ok"><div class="txt"><b>Payment captured: ${usd(a.finalEvent?.amount?.value)}</b><div class="hint">Capture <code>${esc(a.captureId)}</code> · the Intent Record is sealed.</div></div><a class="btn ok" href="/record/${r.id}">View Intent Record</a><a class="btn ghost" href="/record/${r.id}/evidence" target="_blank">Evidence Pack</a><button class="btn ghost" onclick="location.href='/'">New purchase</button></div>`;
+  else if (a.status === 'VOIDED') outcome = `<div class="outcome bad"><div class="txt"><b>Authorization voided. ${usd(a.authorization?.amount?.value)} released back to you.</b><div class="hint">Nothing was charged. Ask the agent to fix the order, then approve the corrected one.</div></div><button class="btn primary" id="fixBtn">Fix order</button><a class="btn ghost" href="/record/${r.id}/evidence" target="_blank">Evidence Pack</a></div>`;
+  else if (a.status === 'AWAITING_APPROVAL') outcome = `<div class="outcome rev"><div class="txt"><b>Your call.</b><div class="hint">Funds are still only authorized. Approve to capture anyway, or reject to void.</div></div><button class="btn ok" id="apBtn">Approve and pay</button><button class="btn bad" id="rjBtn">Reject and void</button></div>`;
 
-  $('#verifyBody').innerHTML = `<div class="fade">
-    <div class="verdict ${v.verdict}"><div class="ic">${icon}</div><div><h3>${esc(v.headline)}</h3><p>Mode: <b>${esc(r.mode)}</b>${r.mode === 'flexible' ? ` (tolerance ${usd(r.tolerance)})` : ''} . Merchant charged ${usd(v.order.total)}${v.riskScore != null ? ` . Risk ${v.riskScore}/100` : ''}</p></div></div>
+  $('#verifyBody').innerHTML = `<div>
+    <div class="verdict ${v.verdict}"><div class="ic">${icon}</div><div><div class="lbl2">${label}</div><h3>${esc(v.headline)}</h3><p>Mode <b>${esc(r.mode)}</b>${r.mode === 'flexible' ? ` · tolerance ${usd(r.tolerance)}` : ''} · merchant charged ${usd(v.order.total)}${v.riskScore != null ? ` · risk ${v.riskScore}/100` : ''}</p></div></div>
     ${v.sneakyCharges?.length ? `<div class="sneakhit"><b>Sneaky charge${v.sneakyCharges.length > 1 ? 's' : ''} caught:</b> ${v.sneakyCharges.map(x => esc(x.label)).join(', ')}. The PayPal payment was valid, but this is not what you agreed to buy.</div>` : ''}
-    <div class="why"><div class="k">Why, in plain words</div>${esc(v.explanation)}<div class="hint">Reviewed by ${esc(v.reviewedBy)}</div></div>
+    <div class="why"><div class="k">${ICON.spark}AI explanation, in plain words</div>${esc(v.explanation)}<div class="hint">Reviewed by ${esc(v.reviewedBy)}</div></div>
+    ${diffHTML(r.constraints, v, a.cart)}
     ${checkGroups(checks)}
     ${outcome}</div>`;
-  if (a.status === 'CAPTURED') { mark('#s3', 'done'); renderStepper(4); }
+  if (a.status === 'CAPTURED') { mark('#s3', 'done'); renderStepper(5); }
+  else if (a.status === 'VOIDED') renderStepper(6);
+  else renderStepper(4);
   $('#fixBtn')?.addEventListener('click', e => busy(e.currentTarget, 'Agent is fixing the order...', fixOrder));
   $('#apBtn')?.addEventListener('click', e => busy(e.currentTarget, 'Capturing...', () => decide(true)));
   $('#rjBtn')?.addEventListener('click', e => busy(e.currentTarget, 'Voiding...', () => decide(false)));
@@ -210,7 +221,7 @@ function checkGroups(checks) {
     const bad = list.filter(c => c.status === 'fail').length;
     return `<div class="grouphd">${title}<span class="cnt ${bad ? 'bad' : 'ok'}">${bad ? bad + ' caught' : 'all clear'}</span></div><div class="checks">${list.map(card).join('')}</div>`;
   };
-  return grp('&#128269; Sneaky charges detector', checks.filter(c => c.group === 'sneaky')) + grp('&#127919; Intent match', checks.filter(c => c.group !== 'sneaky'));
+  return grp(ICON.search + 'Sneaky charges detector', checks.filter(c => c.group === 'sneaky')) + grp(ICON.target + 'Intent match', checks.filter(c => c.group !== 'sneaky'));
 }
 
 async function decide(approve) {
@@ -232,9 +243,9 @@ function setRecord(rec) {
   state.record = rec;
   $('#timeline').innerHTML = rec.events.map(eventLine).join('');
   $('#recLink').href = `/record/${rec.id}`; $('#recLink').style.display = 'inline';
-  $('#recLink').textContent = `${rec.id} >`;
+  $('#recLink').textContent = 'Open ›'; $('#recLink').title = rec.id;
   const ch = rec.chain;
-  $('#chainBox').innerHTML = ch ? `<div class="chainok ${ch.valid ? '' : 'chainbad'}">${ch.valid ? '&#128274; Hash chain intact' : '&#9888; Chain broken'} . ${rec.events.length} events</div>` : '';
+  $('#chainBox').innerHTML = ch ? `<div class="chainok ${ch.valid ? '' : 'chainbad'}">${ICON.shield}${ch.valid ? 'Hash chain intact' : 'Chain broken'} · ${rec.events.length} events</div>` : '';
 }
 
 // ---------- ui helpers ----------
@@ -242,7 +253,11 @@ function mark(sel, cls) { const el = $(sel); el.classList.remove('active', 'lock
 function unlock(sel) { const el = $(sel); el.classList.remove('locked', 'done'); el.classList.add('active'); }
 function lock(sel) { const el = $(sel); el.classList.remove('active', 'done'); el.classList.add('locked'); }
 function renderStepper(n) {
-  const steps = ['Intent', 'Agent cart', 'PayPal authorize', 'Verify', 'Capture'];
-  const cur = n === 1 ? 0 : n === 2 ? 2 : n === 3 ? 3 : 5;
-  $('#stepper').innerHTML = steps.map((s, i) => `<div class="s ${i < cur ? 'ok' : i === cur ? 'on' : ''}"><b>${i < cur ? '&#10003;' : i + 1}</b>${s}</div>`).join('');
+  // n: 1 intent, 2 cart and authorize, 3 verifying, 4 waiting for review, 5 captured, 6 voided
+  const steps = ['Buyer intent', 'Agent builds cart', 'PayPal authorize', 'AI verifies', n === 6 ? 'Voided' : 'Capture or Void'];
+  const cur = { 1: 0, 2: 2, 3: 3, 4: 4, 5: 5, 6: 4 }[n];
+  $('#stepper').innerHTML = steps.map((s, i) => {
+    const cls = n === 6 && i === 4 ? 'badst' : i < cur ? 'ok' : i === cur ? 'on' : '';
+    return `<div class="s ${cls}"><b>${cls === 'ok' ? '&#10003;' : cls === 'badst' ? '&#10005;' : i + 1}</b>${s}</div>`;
+  }).join('');
 }

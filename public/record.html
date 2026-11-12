@@ -1,28 +1,59 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/styles.css"><title>Intent Record . OryvaPay</title></head>
+<html lang="en" data-theme="dark"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<script>(function(){var t;try{t=localStorage.getItem('oryva-theme')}catch(e){}if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}document.documentElement.setAttribute('data-theme',t)})();</script>
+<meta name="theme-color" content="#0a0a0b">
+<link rel="icon" href="/favicon.png" type="image/png"><link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<title>Intent Record · OryvaPay</title></head>
 <body>
 <main class="wrap">
-  <section class="hero"><div class="row" style="justify-content:space-between"><div><h1 id="title">Intent <span>Record</span></h1><p id="subtitle"></p></div><div class="row"><a class="btn ghost" href="/records">All records</a><a class="btn ghost" id="dl">Download JSON</a><a class="btn primary" id="ev" target="_blank">Dispute Evidence Pack</a></div></div></section>
-  <div class="row" style="margin:4px 0 14px"><div class="seg" id="viewSeg"><button data-v="buyer" class="on">Buyer view</button><button data-v="merchant">Merchant view</button></div><span class="hint" id="viewHint" style="margin:0">What you asked for, what was charged, and why.</span></div>
+  <section class="pagehead"><div><span class="eyebrow">Intent Record</span><h1 id="title"></h1><p id="subtitle"></p></div><div class="row"><a class="btn ghost" href="/records">All records</a><a class="btn ghost" id="dl">Download JSON</a><a class="btn primary" id="ev" target="_blank">Dispute Evidence Pack</a></div></section>
+  <div class="row" style="margin:0 0 6px"><div class="seg" id="viewSeg"><button data-v="buyer" class="on">Buyer view</button><button data-v="merchant">Merchant view</button></div><span class="hint" id="viewHint" style="margin:0">What you asked for, what was charged, and why.</span></div>
   <div class="grid">
     <div><div id="merchantPanel" style="display:none"></div><div id="main"></div></div>
-    <aside class="side"><section class="card"><div class="hd"><h2>Evidence chain</h2></div><div class="bd"><div id="chainBox"></div><ul class="timeline" id="timeline"></ul></div></section></aside>
+    <aside class="side"><section class="card"><div class="hd"><h2 id="chainTitle">Evidence chain</h2></div><div class="bd"><div id="chainBox"></div><ul class="timeline" id="timeline"></ul></div></section></aside>
   </div>
 </main>
 <script type="module">
-import { $, esc, usd, when, day, api, header, footer, eventLine } from '/common.js';
+import { $, esc, usd, when, day, api, header, footer, eventLine, diffHTML, statusLabel, ICON } from '/common.js';
 await header('records'); footer();
-const id = location.pathname.split('/').pop() || new URLSearchParams(location.search).get('id');
+const id = location.pathname.split('/').pop();
 const r = await api('GET', '/api/records/' + id);
-$('#title').innerHTML = 'Intent Record <span>' + esc(r.id) + '</span>';
-$('#subtitle').innerHTML = `<span class="status ${r.status}">${r.status.replace('_', ' ')}</span> &nbsp; Created ${when(r.createdAt)} . Mode ${esc(r.mode)}`;
+const last = r.attempts[r.attempts.length - 1];
+$('#title').innerHTML = '<span class="g">' + esc(r.id) + '</span>';
+$('#subtitle').innerHTML = `<span class="status ${r.status}">${statusLabel(r.status)}</span> &nbsp;Created ${when(r.createdAt)} · ${esc(r.mode)} mode · ${r.attempts.length} attempt${r.attempts.length > 1 ? 's' : ''}`;
 $('#dl').href = '/api/records/' + r.id + '/download';
 $('#ev').href = '/record/' + r.id + '/evidence';
-const last = r.attempts[r.attempts.length - 1];
-const approvedFlags = r.events.some(e => e.type === 'buyer_decision' && e.data.approve);
-$('#merchantPanel').innerHTML = `<div class="merchant fade"><h3>Defend against "wrong item" disputes with this record</h3>
+$('#chainTitle').innerHTML = ICON.chain + 'Evidence chain';
+$('#timeline').innerHTML = r.events.map(eventLine).join('');
+$('#chainBox').innerHTML = `<div class="chainok ${r.chain.valid ? '' : 'chainbad'}">${ICON.shield}${r.chain.valid ? 'Hash chain verified' : 'Chain broken at event ' + r.chain.brokenAt} · ${r.events.length} events</div><div class="hint" style="margin:0 0 14px">Head hash <code style="word-break:break-all">${esc(r.chain.headHash || '')}</code></div>`;
+
+const c = r.constraints;
+const attrs = Object.entries(c.product.attributes || {}).map(([k, v]) => k + ' ' + v).join(', ');
+const kv = rows => '<div class="kv">' + rows.map(([k, v]) => `<div class="k">${k}</div><div>${v}</div>`).join('') + '</div>';
+let html = `<section class="card"><div class="hd"><span class="stepno">1</span><h2>What the buyer asked for</h2></div><div class="bd"><p class="quote">"${esc(r.request)}"</p>${kv([
+  ['Product', esc(c.product.category || 'any') + (attrs ? ' · ' + esc(attrs) : '')], ['Quantity', c.quantity], ['Max total', c.maxBudget != null ? usd(c.maxBudget) : 'no limit'],
+  ['Merchant', esc(c.allowedMerchants.join(', ') || 'any verified store')], ['Deliver by', day(c.deliveryDeadline)],
+  ['Subscriptions', c.recurringAllowed ? 'allowed' : 'not allowed'], ['Add-ons and warranties', c.extrasAllowed ? 'allowed' : 'not allowed'], ['Service fees', c.serviceFeesAllowed ? 'allowed' : 'not allowed'],
+  ['Parsed by', c.parsedBy === 'ai' ? 'AI' : 'local heuristic'], ['Verification mode', esc(r.mode) + (r.mode === 'flexible' ? ' · tolerance ' + usd(r.tolerance) : '')]])}</div></section>`;
+for (const a of r.attempts) {
+  const v = a.verification;
+  const st = a.status === 'VOIDED' ? 'BLOCKED' : a.status;
+  html += `<section class="card"><div class="hd"><span class="stepno">${a.n + 1}</span><div><h2>Attempt ${a.n}</h2><div class="sub">${esc(a.cart.merchant.name)} · ${esc(a.cart.shipping.method)} · arrives ${day(a.cart.shipping.eta)}</div></div><div class="spacer"></div><span class="status ${st}">${statusLabel(a.status)}</span></div><div class="bd">
+  ${v ? `<div class="verdict ${v.verdict}" style="padding:18px 20px"><div class="ic" style="width:48px;height:48px;font-size:22px">${{ PASS: '&#10003;', BLOCK: '&#10005;', NEEDS_APPROVAL: '?' }[v.verdict]}</div><div><div class="lbl2">Verdict · ${statusLabel(v.verdict)}</div><h3 style="font-size:18px">${esc(v.headline)}</h3><p>Reviewed by ${esc(v.reviewedBy)} · ${when(v.verifiedAt)}</p></div></div>
+  <div class="why"><div class="k">${ICON.spark}Why, in plain words</div>${esc(v.explanation)}</div>
+  ${diffHTML(c, v, a.cart)}` : '<div class="hint">Not verified yet.</div>'}
+  ${kv([['PayPal order ID', '<code>' + esc(a.orderId || 'none') + '</code>'], ['PayPal authorization ID', '<code>' + esc(a.authorizationId || 'none') + '</code>'],
+    ['Final payment event', a.finalEvent ? esc(a.finalEvent.type) + ' · ' + when(a.finalEvent.at) + (a.captureId ? ' · capture <code>' + esc(a.captureId) + '</code>' : '') : 'pending']])}
+  ${v ? `<div class="checks" style="margin-top:16px">${v.checks.filter(x => x.status !== 'pass').map(x => `<div class="check ${x.status}"><span class="st">${x.status === 'warn' ? '!' : '&#10005;'}</span><div><div class="t">${esc(x.label)} <span class="src ${x.source === 'ai' ? 'ai' : ''}">${x.source === 'ai' ? 'AI' : 'Rule'}</span></div><div class="d">${esc(x.detail)}</div></div></div>`).join('')}</div>` : ''}
+  </div></section>`;
+}
+$('#main').innerHTML = html;
+
+$('#merchantPanel').innerHTML = `<div class="merchant"><h3>${ICON.store}Defend against "wrong item" disputes with this record</h3>
 <p style="margin:0">PayPal's Seller Protection for agentic checkout covers eligible <b>unauthorized transaction</b> and <b>item not received</b> claims. A buyer who says "my AI agent bought the wrong thing" is making a different kind of claim, one that is outside that protection. This Intent Record shows the buyer's own words, the rules they approved, and whether the charged order matched them before capture.</p>
 <ol>
 <li><b>Buyer intent:</b> "${esc(r.request)}"</li>
@@ -30,7 +61,7 @@ $('#merchantPanel').innerHTML = `<div class="merchant fade"><h3>Defend against "
 <li><b>PayPal IDs to quote in the dispute:</b> order <code>${esc(last?.orderId || 'none')}</code>, authorization <code>${esc(last?.authorizationId || 'none')}</code>${last?.captureId ? ', capture <code>' + esc(last.captureId) + '</code>' : ''}</li>
 <li><b>Tamper evidence:</b> ${r.events.length} events, hash chain ${r.chain.valid ? 'verified' : 'broken'}</li>
 </ol>
-<div class="row" style="margin-top:14px"><a class="btn primary" href="/record/${r.id}/evidence" target="_blank">Open Dispute Evidence Pack</a><span class="hint" style="margin:0">Print to PDF and attach it to the PayPal Resolution Center case.</span></div>
+<div class="row" style="margin-top:16px"><a class="btn primary" href="/record/${r.id}/evidence" target="_blank">Open Dispute Evidence Pack</a><span class="hint" style="margin:0">Print to PDF and attach it to the PayPal Resolution Center case.</span></div>
 <div class="cite">Source: <a href="https://www.paypal.ai/us/agent-ready" target="_blank" rel="noopener">PayPal Agent Ready</a>: "Seller Protection is only available on eligible unauthorized transactions and items not received claims for PayPal Checkout merchants."</div></div>`;
 document.querySelector('#viewSeg').addEventListener('click', e => {
   const v = e.target.dataset.v; if (!v) return;
@@ -39,31 +70,5 @@ document.querySelector('#viewSeg').addEventListener('click', e => {
   $('#viewHint').textContent = v === 'merchant' ? 'How a merchant uses this record to answer a dispute.' : 'What you asked for, what was charged, and why.';
 });
 if (location.hash === '#merchant') document.querySelector('#viewSeg [data-v=merchant]').click();
-
-$('#timeline').innerHTML = r.events.map(eventLine).join('');
-$('#chainBox').innerHTML = `<div class="chainok ${r.chain.valid ? '' : 'chainbad'}">${r.chain.valid ? '&#128274; Hash chain verified' : '&#9888; Chain broken at event ' + r.chain.brokenAt}</div><div class="hint" style="margin-bottom:12px">Head hash <code style="word-break:break-all">${esc(r.chain.headHash || '')}</code></div>`;
-const c = r.constraints;
-const attrs = Object.entries(c.product.attributes || {}).map(([k, v]) => k + ': ' + v).join(', ');
-const kv = rows => '<div class="kv">' + rows.map(([k, v]) => `<div class="k">${k}</div><div>${v}</div>`).join('') + '</div>';
-let html = `<section class="card"><div class="hd"><h2>1. What the buyer asked for</h2></div><div class="bd"><p style="font-size:17px;margin:0 0 16px">"${esc(r.request)}"</p>${kv([
-  ['Product', esc(c.product.category || 'any') + (attrs ? ' (' + esc(attrs) + ')' : '')], ['Quantity', c.quantity], ['Max total', c.maxBudget != null ? usd(c.maxBudget) : 'no limit'],
-  ['Merchant', esc(c.allowedMerchants.join(', ') || 'any verified store')], ['Deliver by', day(c.deliveryDeadline)],
-  ['Subscriptions', c.recurringAllowed ? 'allowed' : 'not allowed'], ['Add-ons, warranties', c.extrasAllowed ? 'allowed' : 'not allowed'], ['Service fees', c.serviceFeesAllowed ? 'allowed' : 'not allowed'],
-  ['Parsed by', c.parsedBy === 'ai' ? 'AI' : 'local heuristic'], ['Verification mode', esc(r.mode) + (r.mode === 'flexible' ? ', tolerance ' + usd(r.tolerance) : '')]])}</div></section>`;
-for (const a of r.attempts) {
-  const v = a.verification;
-  html += `<section class="card"><div class="hd"><h2>Attempt ${a.n}: ${a.status === 'CAPTURED' ? 'captured' : a.status === 'VOIDED' ? 'voided' : a.status.toLowerCase().replace('_', ' ')}</h2><div class="spacer"></div><span class="status ${a.status === 'VOIDED' ? 'BLOCKED' : a.status}">${v ? v.verdict.replace('_', ' ') : a.status}</span></div><div class="bd">
-  <b>2. What the agent picked and 3. what the merchant charged</b>
-  <table class="items" style="margin:10px 0 14px"><thead><tr><th>Item</th><th class="n">Qty</th><th class="n">Quoted</th><th class="n">Charged</th></tr></thead><tbody>${(v ? v.order.lines : a.cart.items).map(l => {
-    const flagged = v && v.offendingSkus.includes(l.sku);
-    return `<tr class="${flagged ? 'flag' : ''}"><td><div class="nm">${esc(l.name)}${flagged ? '<span class="tag bad">Flagged</span>' : ''}</div><div class="ds">SKU ${esc(l.sku)}</div></td><td class="n">${l.quantity}</td><td class="n">${usd(l.quotedUnitPrice)}</td><td class="n">${usd(l.unitPrice ?? l.chargedUnitPrice)}</td></tr>`; }).join('')}</tbody></table>
-  ${kv([['Merchant', esc(a.cart.merchant.name)], ['Shipping', esc(a.cart.shipping.method) + ', arrives ' + day(a.cart.shipping.eta)], ['Merchant charged total', v ? usd(v.order.total) : usd(a.cartTotal)],
-    ['PayPal order ID', '<code>' + esc(a.orderId || 'none') + '</code>'], ['PayPal authorization ID', '<code>' + esc(a.authorizationId || 'none') + '</code>'],
-    ['Final payment event', a.finalEvent ? esc(a.finalEvent.type) + ' at ' + when(a.finalEvent.at) + (a.captureId ? ' (capture <code>' + esc(a.captureId) + '</code>)' : '') : 'pending']])}
-  ${v ? `<div style="margin-top:18px"><b>4. Why OryvaPay ${v.verdict === 'PASS' ? 'allowed' : v.verdict === 'BLOCK' ? 'blocked' : 'flagged'} it</b><div class="why" style="margin-top:8px">${esc(v.explanation)}<div class="hint">Reviewed by ${esc(v.reviewedBy)} at ${when(v.verifiedAt)}</div></div>
-  <div class="checks">${v.checks.map(c => `<div class="check ${c.status}"><span class="st">${c.status === 'pass' ? '&#10003;' : c.status === 'warn' ? '!' : '&#10005;'}</span><div><div class="t">${esc(c.label)} <span class="src ${c.source === 'ai' ? 'ai' : ''}">${c.source === 'ai' ? 'AI' : 'Rule'}</span></div><div class="d">${esc(c.detail)}</div></div></div>`).join('')}</div></div>` : ''}
-  </div></section>`;
-}
-$('#main').innerHTML = html;
 </script>
 </body></html>

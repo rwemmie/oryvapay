@@ -1,39 +1,41 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>OryvaPay: verify intent before payment</title>
-<meta name="description" content="An independent AI verification layer that checks an AI shopping agent's order against what you asked for before PayPal captures the money.">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/styles.css">
+<script>(function(){var t;try{t=localStorage.getItem('oryva-theme')}catch(e){}if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}document.documentElement.setAttribute('data-theme',t)})();</script>
+<meta name="theme-color" content="#0a0a0b">
+<link rel="icon" href="/favicon.png" type="image/png"><link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<title>OryvaPay · Verify intent before payment</title>
+<meta name="description" content="The AI verification layer that checks an agent's order against the buyer's intent before PayPal captures the money.">
 </head>
 <body>
 <main class="wrap">
   <section class="hero">
-    <h1>Verify intent <span>before payment.</span></h1>
-    <p class="lead">A payment can be legitimate while the purchase is wrong.</p>
-    <p>Your AI shopping agent shouldn't be able to spend your money on something you never agreed to buy. OryvaPay holds the payment with PayPal, checks the order against what you actually asked for, and only then lets the money move.</p>
+    <span class="eyebrow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7z"/></svg>PayPal + AI for agentic commerce</span>
+    <h1>Verify intent <span class="g">before payment.</span></h1>
+    <p class="lead">The AI verification layer that checks an agent's order against the buyer's intent before PayPal captures the money.</p>
+    <p class="sublead"><b>A payment can be legitimate while the purchase is wrong.</b> Your AI shopping agent shouldn't be able to spend your money on something you never agreed to buy.</p>
     <div class="sneaky">
-      <div class="sneaky-hd"><span class="sneaky-ic">&#128269;</span><div><b>Sneaky charges detector</b><div class="hint" style="margin:0">Catches what an agent or checkout slips in, even when the payment itself is approved.</div></div></div>
-      <div class="sneaky-list">
-        <span>Hidden service fees</span><span>Add-on warranties</span><span>Surprise subscriptions</span><span>Price change after approval</span><span>Delivery terms you did not accept</span>
-      </div>
+      <div class="sneaky-hd"><span class="sneaky-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span><div><b>Sneaky charges detector</b><div class="hint" style="margin:0">Catches what an agent or checkout slips in, even when the payment itself is approved.</div></div></div>
+      <div class="sneaky-list"><span>Hidden service fees</span><span>Add-on warranties</span><span>Surprise subscriptions</span><span>Price change after approval</span><span>Delivery terms you did not accept</span></div>
     </div>
     <div class="stepper" id="stepper"></div>
   </section>
 
   <div class="grid">
     <div id="flow">
-      <!-- Step 1 -->
       <section class="card active" id="s1">
-        <div class="hd"><span class="stepno">1</span><div><h2>Tell your agent what you want</h2><div class="sub">Plain English. AI turns it into rules the agent must follow.</div></div></div>
+        <div class="hd"><span class="stepno">1</span><div><h2>Buyer intent</h2><div class="sub">Say it in plain English. AI turns it into rules the agent must follow.</div></div></div>
         <div class="bd">
-          <label class="lbl" for="req">Your request</label>
+          <label class="lbl" for="req">What should your agent buy?</label>
           <textarea id="req">Black running shoes, size 10, under $80, one pair, from StrideLab, no subscriptions, deliver by Friday</textarea>
           <div class="chips" id="examples"></div>
           <div class="row" style="margin-top:16px"><button class="btn primary" id="parseBtn">Turn into purchase rules</button></div>
           <div id="consWrap" style="display:none" class="fade">
-            <div class="row" style="margin:22px 0 10px;justify-content:space-between"><b>Approved purchase constraints</b><span class="aitag" id="parsedBy"></span></div>
+            <div class="sectitle"><b>Approved purchase rules</b><span class="aitag" id="parsedBy"></span></div>
             <div class="cons" id="cons"></div>
             <div class="settings">
               <div class="box">
@@ -54,35 +56,33 @@
         </div>
       </section>
 
-      <!-- Step 2 -->
       <section class="card locked" id="s2">
-        <div class="hd"><span class="stepno">2</span><div><h2>Agent's cart and PayPal approval</h2><div class="sub">You approve a PayPal authorization. Money is held, not taken.</div></div><div class="spacer"></div><span class="pill" id="attemptPill"></span></div>
+        <div class="hd"><span class="stepno">2</span><div><h2>Agent builds cart · PayPal authorize</h2><div class="sub">You approve a PayPal authorization. Money is held, not taken.</div></div><div class="spacer"></div><span class="pill" id="attemptPill"></span></div>
         <div class="bd">
           <ul class="agentlog" id="agentlog"></ul>
           <div class="meta" id="cartMeta"></div>
           <table class="items"><thead><tr><th>Item</th><th class="n">Qty</th><th class="n">Price</th><th class="n">Line total</th></tr></thead><tbody id="cartItems"></tbody></table>
           <div class="totals"><table id="cartTotals"></table></div>
           <div class="paybox" style="margin-top:18px">
-            <div class="txt"><b>Authorize with PayPal.</b> PayPal holds the funds. OryvaPay then compares the order PayPal received against your rules and either captures it or voids it.</div>
+            <div class="txt"><b>Authorize with PayPal</b>PayPal holds the funds. OryvaPay then compares the order PayPal received against your rules and either captures it or voids it.</div>
             <div id="payArea"></div>
           </div>
           <div class="err" id="err2"></div>
         </div>
       </section>
 
-      <!-- Step 3 -->
       <section class="card locked" id="s3">
-        <div class="hd"><span class="stepno">3</span><div><h2>OryvaPay verification</h2><div class="sub">Rule checks for the numbers, AI review for the meaning.</div></div></div>
+        <div class="hd"><span class="stepno">3</span><div><h2>AI verifies · Capture or Void</h2><div class="sub">Rule checks for the numbers, AI review for the meaning.</div></div></div>
         <div class="bd" id="verifyBody"></div>
       </section>
     </div>
 
     <aside class="side">
       <section class="card">
-        <div class="hd"><h2>Live Intent Record</h2><div class="spacer"></div><a id="recLink" class="sub" href="#" style="display:none">Open</a></div>
+        <div class="hd"><h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>Live Intent Record</h2><div class="spacer"></div><a id="recLink" class="sub" href="#" style="display:none;font-size:12.5px;font-weight:600">Open</a></div>
         <div class="bd">
           <div id="chainBox"></div>
-          <ul class="timeline" id="timeline"><div class="empty">Every step is written here and sealed with a SHA-256 hash chain, so it can serve as evidence if there is ever a dispute.</div></ul>
+          <ul class="timeline" id="timeline"><div class="empty">Every step is written here and sealed with a SHA-256 hash chain, ready as evidence if there is ever a dispute.</div></ul>
         </div>
       </section>
     </aside>
