@@ -40,7 +40,17 @@ app.get('/api/config', (req, res) => res.json({
   aiHost: config.aiLive ? new URL(config.ai.baseUrl).host : null,
   scenarios: SCENARIOS,
   modes: MODES,
+  demoVideo: demoVideo(),
 }));
+
+// DEMO_VIDEO_URL: any YouTube link (watch, youtu.be, shorts, embed). Served as a privacy friendly youtube-nocookie embed.
+function demoVideo() {
+  const u = (process.env.DEMO_VIDEO_URL || '').trim();
+  if (!u) return null;
+  const m = u.match(/(?:youtu\.be\/|v=|\/embed\/|\/shorts\/|\/live\/)([A-Za-z0-9_-]{11})/);
+  if (!m) return null;
+  return { id: m[1], embed: `https://www.youtube-nocookie.com/embed/${m[1]}?rel=0&modestbranding=1&autoplay=1`, thumb: `https://i.ytimg.com/vi/${m[1]}/maxresdefault.jpg`, url: u };
+}
 
 app.get('/api/catalog', (req, res) => res.json({ merchants: MERCHANTS, products: CATALOG }));
 

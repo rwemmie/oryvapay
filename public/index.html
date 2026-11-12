@@ -16,7 +16,7 @@
 
 <div class="snav"><div class="bar">
   <a class="brand" href="/" aria-label="OryvaPay home"><img src="/brand/mark-128.png" alt="" width="42" height="34"><span class="wm">Oryva<b>Pay</b></span></a>
-  <nav class="links"><a href="#problem">Problem</a><a href="#how">How it works</a><a href="#sneaky">Sneaky charges</a><a href="#modes">Modes</a><a href="#evidence">Evidence</a></nav>
+  <nav class="links"><a href="#demo">Watch demo</a><a href="#problem">Problem</a><a href="#how">How it works</a><a href="#sneaky">Sneaky charges</a><a href="#modes">Modes</a><a href="#evidence">Evidence</a></nav>
   <div class="spacer" style="flex:1"></div>
   <button class="themebtn" id="themeBtn" title="Switch light or dark mode" aria-label="Switch light or dark mode">
     <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
@@ -34,7 +34,7 @@
       <p class="sub rv" style="--i:2">The AI verification layer that checks an agent's order against the buyer's intent before PayPal captures the money. <b>A payment can be legitimate while the purchase is wrong.</b></p>
       <div class="ctas rv" style="--i:3">
         <a class="btn primary lg magnet" href="/app">Try the live demo <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        <a class="btn ghost lg magnet" href="#how">See how it works</a>
+        <a class="btn ghost lg magnet" href="#demo"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/></svg>Watch demo</a>
       </div>
       <div class="trust rv" style="--i:4">
         <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> PayPal sandbox, live</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Real AI verdicts</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Hash chained Intent Records</span>
@@ -105,6 +105,26 @@
 <div class="marquee" aria-hidden="true"><div class="track" id="mq">
   <span><i></i>Hidden service fees</span><span><i></i>Add-on warranties</span><span><i></i>Surprise subscriptions</span><span><i></i>Price changed after approval</span><span><i></i>Wrong quantity</span><span><i></i>Look-alike merchants</span><span><i></i>Delivery too late</span><span><i></i>Over budget</span>
 </div></div>
+
+<section class="sx demo-sx" id="demo"><div class="wrap">
+  <div class="demo-head">
+    <div><span class="kicker rv"><i></i>Watch the demo</span>
+    <h2 class="h2 rv" style="--i:1">See a sneaky charge get caught in real time.</h2></div>
+    <p class="p-lead rv" style="--i:2">A short guided walkthrough: a buyer request, a PayPal sandbox authorization, the AI verdict, the void, the fix and the capture, then the Intent Record.</p>
+  </div>
+  <div class="player rv" style="--i:2" id="player">
+    <div class="poster" id="poster">
+      <div class="pgrid"></div>
+      <div class="pmid">
+        <span class="playbtn" id="playBtn" aria-disabled="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/></svg></span>
+        <b id="pTitle">Demo video coming soon</b>
+        <span id="pSub">The walkthrough is being recorded. Meanwhile, run the full flow yourself in the PayPal sandbox.</span>
+        <a class="btn primary magnet" id="pCta" href="/app">Try the live demo</a>
+      </div>
+      <div class="pbar"><span class="pdot"></span><span>OryvaPay · product walkthrough</span><span class="plen" id="pLen">Video guide</span></div>
+    </div>
+  </div>
+</div></section>
 
 <section class="sx" id="problem"><div class="wrap">
   <span class="kicker rv"><i></i>The problem</span>

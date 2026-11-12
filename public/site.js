@@ -62,3 +62,18 @@ if (!reduce && matchMedia('(pointer:fine)').matches) {
   // subtle parallax on hero photo
   
 }
+
+// Watch the demo: embed DEMO_VIDEO_URL (youtube-nocookie) when configured, otherwise a clear "coming soon" state.
+fetch('/api/config').then(r => r.json()).then(cfg => {
+  const v = cfg.demoVideo; if (!v) return;
+  const player = $('#player'), poster = $('#poster'), btn = $('#playBtn');
+  player.classList.add('ready');
+  poster.classList.add('has-thumb'); poster.style.backgroundImage = `url("${v.thumb}")`;
+  $('#pTitle').textContent = 'Watch the OryvaPay demo';
+  $('#pSub').textContent = 'A guided walkthrough of a blocked sneaky charge, the fix and the capture.';
+  $('#pCta').style.display = 'none'; $('#pLen').textContent = 'Play video';
+  btn.removeAttribute('aria-disabled'); btn.setAttribute('role', 'button'); btn.setAttribute('tabindex', '0'); btn.setAttribute('aria-label', 'Play demo video');
+  const play = () => { player.innerHTML = `<iframe src="${v.embed}" title="OryvaPay demo video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe>`; };
+  btn.addEventListener('click', play);
+  btn.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); } });
+}).catch(() => {});

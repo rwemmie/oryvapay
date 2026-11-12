@@ -91,6 +91,7 @@ node scripts/live-smoke.mjs   # real sandbox: creates an AUTHORIZE order and pri
 | `AI_API_KEY` | for real AI | xAI or OpenAI key |
 | `AI_BASE_URL` | no | Default `https://api.x.ai/v1` |
 | `AI_MODEL` | no | Default `grok-4` |
+| `DEMO_VIDEO_URL` | no | YouTube link for the landing page "Watch the demo" player (embedded via youtube-nocookie). Unset shows "Demo video coming soon" |
 | `AI_TIMEOUT_MS` | no | Default 45000 |
 | `PORT` | no | Default 3000 |
 | `DATA_DIR` | no | Where `records.json` is stored, default `data` |
