@@ -16,8 +16,8 @@ services:
       - key: PAYPAL_CLIENT_SECRET
         sync: false
       - key: AI_BASE_URL
-        value: https://api.x.ai/v1
+        value: https://api.groq.com/openai/v1
       - key: AI_MODEL
-        value: grok-4
+        value: openai/gpt-oss-120b
       - key: AI_API_KEY
         sync: false
