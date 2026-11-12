@@ -3,7 +3,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { config } from './lib/config.js';
 import { parseIntent } from './lib/ai.js';
-import { agentBuildCart, SCENARIOS, CATALOG, MERCHANTS } from './lib/catalog.js';
+import { agentBuildCart, SCENARIOS, CATALOG, MERCHANTS, findProduct } from './lib/catalog.js';
+import { storePage } from './lib/store.js';
 import * as paypal from './lib/paypal.js';
 import { verify, MODES } from './lib/verify.js';
 import { renderEvidencePack } from './lib/evidence.js';
@@ -84,7 +85,7 @@ app.post('/api/records/:id/order', wrap(async (req, res) => {
   if (a.orderId && a.status === 'ORDER_CREATED') return res.json({ id: a.orderId, approveUrl: a.approveUrl });
   if (a.status !== 'CART_BUILT') throw bad('This attempt already has a payment. Use Fix order to start a new attempt.');
   const origin = `${req.protocol}://${req.get('host')}`;
-  const order = await paypal.createOrder(a.cart, `${r.id}-${a.n}`, { returnUrl: `${origin}/app?record=${r.id}&paypal=approved`, cancelUrl: `${origin}/app?record=${r.id}&paypal=cancelled` });
+  const order = await paypal.createOrder(a.cart, `${r.id}-${a.n}`, { origin, returnUrl: `${origin}/app?record=${r.id}&paypal=approved`, cancelUrl: `${origin}/app?record=${r.id}&paypal=cancelled` });
   const approveUrl = order.links?.find(l => l.rel === 'approve' || l.rel === 'payer-action')?.href;
   updateRecord(r.id, x => Object.assign(lastAttempt(x), { orderId: order.id, approveUrl, status: 'ORDER_CREATED' }));
   appendEvent(r.id, 'paypal_order_created', { attempt: a.n, orderId: order.id, intent: 'AUTHORIZE', amount: order.purchase_units?.[0]?.amount || null, simulated: !config.paypalLive });
@@ -170,6 +171,12 @@ app.get('/record/:id/evidence', wrap(async (req, res) => {
   res.type('html').send(renderEvidencePack(withChain(load(req.params.id))));
 }));
 
+// StrideLab demo store: a product page per catalog item, so every order line links to what was actually sold.
+app.get('/store/:merchant/:slug', (req, res) => {
+  const p = findProduct(req.params.merchant, req.params.slug);
+  if (!p) return res.status(404).send('Product not found');
+  res.type('html').send(storePage(p));
+});
 app.get('/record/:id', (req, res) => res.sendFile(path.join(__dirname, 'public', 'record.html')));
 
 app.listen(config.port, () => {

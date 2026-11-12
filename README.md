@@ -129,6 +129,10 @@ scripts/live-smoke.mjs  Real sandbox order creation check
 * In the PayPal sandbox every order is paid to the developer's own sandbox business account. The merchant name comes from the agent's cart and the order's brand name.
 * Records are stored in a JSON file, not a database.
 
+## Demo store images
+
+The StrideLab and PeakGear product photos in `public/store/` are AI generated studio renders of unbranded products made for this demo. The Protection Plan and ShoeCare+ graphics were made by OryvaPay. No real brands are shown.
+
 ## License
 
 MIT

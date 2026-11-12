@@ -112,3 +112,23 @@ export function diffHTML(c, v, cart) {
   return `<div class="diff"><div class="dh"><div></div><div class="a">What you asked for</div><div>What the merchant charged</div></div>
     ${rows.map(([f, a, b, s], i) => `<div class="dr ${s === 'fail' ? 'bad' : s === 'warn' ? 'warn' : ''}" style="animation-delay:${i * 40}ms"><div class="f">${f}</div><div>${a}</div><div class="ch"><span>${b}</span>${mk(s)}</div></div>`).join('')}</div>`;
 }
+
+// Order lines with product photo and a link to the product page on the StrideLab demo store.
+export function thumbHTML(it, size = 44) {
+  return it.image ? `<img class="thumb" src="${esc(it.image)}" alt="" width="${size}" height="${size}" loading="lazy">` : `<span class="thumb ph" style="width:${size}px;height:${size}px"></span>`;
+}
+export function viewLink(it) {
+  return it.url ? `<a class="viewp" href="${esc(it.url)}" target="_blank" rel="noopener">View product</a>` : '';
+}
+export function linesHTML(items, flagged = []) {
+  return `<div class="olines">${items.map(it => {
+    const price = it.chargedUnitPrice ?? it.unitPrice;
+    const bad = flagged.includes(it.sku);
+    return `<div class="oline ${bad ? 'bad' : ''}">${thumbHTML(it)}<div class="ot"><b>${esc(it.name)}</b><span>SKU ${esc(it.sku)} · qty ${it.quantity}${bad ? ' · <em>flagged</em>' : ''}</span>${viewLink(it)}</div><div class="op">${usd(price * it.quantity)}</div></div>`;
+  }).join('')}</div>`;
+}
+export function chargedLinesHTML(v, cart) {
+  const bySku = Object.fromEntries((cart?.items || []).map(i => [i.sku, i]));
+  const items = v.order.lines.map(l => ({ ...l, url: l.url || bySku[l.sku]?.url, image: l.image || bySku[l.sku]?.image, chargedUnitPrice: l.unitPrice }));
+  return `<div class="olh">What PayPal is holding, line by line</div>${linesHTML(items, v.offendingSkus || [])}`;
+}

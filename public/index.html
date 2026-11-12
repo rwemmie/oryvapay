@@ -139,6 +139,7 @@
     <span class="bpa" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
     <div class="bpc pp rv" style="--i:2"><span class="bpt"><span class="ppbadge"><span class="ppw" aria-label="PayPal"><b>Pay</b><i>Pal</i></span></span><small>Step 3</small></span><h3>PayPal captures or voids</h3><p>A match is captured. A mismatch is voided and the hold is released. The buyer pays nothing for the wrong order.</p><code>POST /v2/payments/authorizations/{id}/capture</code><code>POST /v2/payments/authorizations/{id}/void</code></div>
   </div>
+  <div class="sbhint rv" style="--i:3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg><span><b>Testing it yourself?</b> Sandbox only, no real money. In the PayPal window, log in with a PayPal sandbox buyer account, or choose <b>Pay with Debit or Credit Card</b> and use a PayPal sandbox test card such as <code>4032 0393 1798 4658</code> (any future expiry, any 3 digit CVV, a US billing address). PayPal may ask you to create a sandbox account with a password; any test email and password work.</span></div>
   <div class="bpnote rv" style="--i:3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="m9 12 2 2 4-4"/></svg>Each Intent Record keeps the PayPal order ID, authorization ID and capture ID, so the evidence lines up with the PayPal transaction.</div>
 </div></section>
 
@@ -267,7 +268,7 @@
 </div></section>
 
 <div class="wrap"><div class="band rv">
-  <div><h2>Verify intent before payment.</h2><p>Run the full flow with real PayPal sandbox payments and live AI verdicts. It takes about a minute.</p></div>
+  <div><h2>Verify intent before payment.</h2><p>Run the full flow with real PayPal sandbox payments and live AI verdicts. It takes about a minute.</p><p class="bandnote">Sandbox only, no real money. In the PayPal window, log in with a PayPal sandbox buyer account, or choose <b>Pay with Debit or Credit Card</b> and use a PayPal sandbox test card such as <code>4032 0393 1798 4658</code> (any future expiry, any 3 digit CVV, a US billing address). PayPal may ask you to create a sandbox account with a password; any test email and password work.</p></div>
   <div class="ctas"><a class="btn dark lg magnet" href="/app">Try the live demo</a><a class="btn light lg magnet" href="/records">View Intent Records</a></div>
 </div></div>
 

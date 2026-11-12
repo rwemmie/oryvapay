@@ -480,3 +480,6 @@ body.site{overflow-x:hidden}
 @media(max-width:960px){.bp{grid-template-columns:1fr}.bpa{transform:rotate(90deg);height:24px}}
 @media (prefers-reduced-motion:reduce){.ppappr{display:none}}
 .pill2{white-space:nowrap}
+.bandnote{font-size:13px!important;margin-top:14px!important;opacity:.8!important;max-width:620px}
+.bandnote code{background:rgba(0,0,0,.12);padding:1px 6px;border-radius:6px;font-size:12px}
+.bop .sbhint{margin-top:24px}

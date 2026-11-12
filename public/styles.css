@@ -317,3 +317,21 @@ footer.ft .brand .wm{font-size:16px}
 .kv > *{min-width:0;overflow-wrap:anywhere}
 .card code,.timeline code{overflow-wrap:anywhere;word-break:break-all}
 @media(max-width:640px){.kv{grid-template-columns:1fr;gap:2px 0}.kv .k{margin-top:8px}}
+/* product thumbnails and links on order lines */
+.thumb{width:44px;height:44px;border-radius:10px;object-fit:cover;background:#ece9e4;flex:none;display:block;border:1px solid var(--line)}
+.thumb.ph{display:inline-block}
+.cline{display:flex;gap:12px;align-items:center}
+.viewp{font-size:12.5px;font-weight:600;color:var(--accent);white-space:nowrap}
+.viewp:hover{text-decoration:underline}
+.ds .viewp{margin-left:6px}
+.olh{font-size:12px;font-weight:650;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:18px 0 8px}
+.olines{display:grid;gap:8px}
+.oline{display:flex;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--surface2)}
+.oline.bad{background:var(--bad-bg);border-color:var(--bad-line)}
+.oline .ot{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.oline .ot b{font-size:14px}.oline .ot span{font-size:12px;color:var(--muted)}.oline .ot em{color:var(--bad);font-style:normal;font-weight:650}
+.oline .op{font-weight:700;font-variant-numeric:tabular-nums}
+.ppwin .thumb{border-radius:6px}
+.sbhint{display:flex;gap:10px;align-items:flex-start;margin-top:14px;padding:12px 14px;border-radius:14px;background:rgba(0,112,224,.08);border:1px solid rgba(0,112,224,.25);font-size:13px;line-height:1.5;color:var(--ink2)}
+.sbhint svg{width:18px;height:18px;flex:none;color:#0070E0;margin-top:1px}
+.sbhint code{font-size:12px;background:var(--surface);padding:1px 6px;border-radius:6px}

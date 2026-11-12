@@ -1,4 +1,4 @@
-import { $, esc, usd, day, api, header, footer, eventLine, diffHTML, ICON } from './common.js';
+import { chargedLinesHTML, thumbHTML, viewLink, linesHTML, $, esc, usd, day, api, header, footer, eventLine, diffHTML, ICON } from './common.js';
 
 const EXAMPLES = [
   'Black running shoes, size 10, under $80, one pair, from StrideLab, no subscriptions, deliver by Friday',
@@ -105,7 +105,7 @@ function renderCart() {
   $('#cartItems').innerHTML = c.items.map(it => {
     const tag = it.kind === 'subscription' ? '<span class="tag sub">Recurring</span>' : it.kind === 'warranty' ? '<span class="tag war">Add-on</span>' : '';
     const price = it.chargedUnitPrice ?? it.unitPrice;
-    return `<tr><td><div class="nm">${esc(it.name)}${tag}</div><div class="ds">${esc(it.description || '')} · SKU ${esc(it.sku)}</div></td><td class="n">${it.quantity}</td><td class="n">${usd(price)}</td><td class="n">${usd(price * it.quantity)}</td></tr>`;
+    return `<tr><td><div class="cline">${thumbHTML(it)}<div><div class="nm">${esc(it.name)}${tag}</div><div class="ds">${esc(it.description || '')} · SKU ${esc(it.sku)} ${viewLink(it)}</div></div></div></td><td class="n">${it.quantity}</td><td class="n">${usd(price)}</td><td class="n">${usd(price * it.quantity)}</td></tr>`;
   }).join('');
   const itemsTotal = c.items.reduce((s, i) => s + (i.chargedUnitPrice ?? i.unitPrice) * i.quantity, 0);
   $('#cartTotals').innerHTML = `<tr><td>Items</td><td>${usd(itemsTotal)}</td></tr><tr><td>Shipping</td><td>${c.shipping.price ? usd(c.shipping.price) : 'Free'}</td></tr>${c.serviceFee ? `<tr><td>${esc(c.serviceFee.label)}</td><td>${usd(c.serviceFee.amount)}</td></tr>` : ''}<tr class="grand"><td>Total</td><td>${usd(a.cartTotal)}</td></tr>`;
@@ -155,7 +155,7 @@ async function openDemoPayPal() {
     $('#ppUrl').textContent = order.approveUrl || 'https://www.sandbox.paypal.com/checkoutnow';
     $('#ppAmt').textContent = usd(a.cartTotal) + ' USD';
     $('#ppMerchant').textContent = `to ${a.cart.merchant.name}`;
-    $('#ppLines').innerHTML = a.cart.items.map(i => `<div class="li"><span>${esc(i.name)} x${i.quantity}</span><span>${usd((i.chargedUnitPrice ?? i.unitPrice) * i.quantity)}</span></div>`).join('') + (a.cart.serviceFee ? `<div class="li"><span>${esc(a.cart.serviceFee.label)}</span><span>${usd(a.cart.serviceFee.amount)}</span></div>` : '');
+    $('#ppLines').innerHTML = a.cart.items.map(i => `<div class="li"><span style="display:flex;gap:8px;align-items:center">${thumbHTML(i, 28)}${esc(i.name)} x${i.quantity}</span><span>${usd((i.chargedUnitPrice ?? i.unitPrice) * i.quantity)}</span></div>`).join('') + (a.cart.serviceFee ? `<div class="li"><span>${esc(a.cart.serviceFee.label)}</span><span>${usd(a.cart.serviceFee.amount)}</span></div>` : '');
     $('#ppModal').classList.add('on');
   } catch (err) { showErr('#err2', err); }
 }
@@ -205,6 +205,7 @@ function renderVerdict() {
     ${v.sneakyCharges?.length ? `<div class="sneakhit"><b>Sneaky charge${v.sneakyCharges.length > 1 ? 's' : ''} caught:</b> ${v.sneakyCharges.map(x => esc(x.label)).join(', ')}. The PayPal payment was valid, but this is not what you agreed to buy.</div>` : ''}
     <div class="why"><div class="k">${ICON.spark}AI explanation, in plain words</div>${esc(v.explanation)}<div class="hint">Reviewed by ${esc(v.reviewedBy)}</div></div>
     ${diffHTML(r.constraints, v, a.cart)}
+    ${chargedLinesHTML(v, a.cart)}
     ${checkGroups(checks)}
     ${outcome}</div>`;
   if (a.status === 'CAPTURED') { mark('#s3', 'done'); renderStepper(5); }
