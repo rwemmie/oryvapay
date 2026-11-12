@@ -177,6 +177,7 @@ app.get('/store/:merchant/:slug', (req, res) => {
   if (!p) return res.status(404).send('Product not found');
   res.type('html').send(storePage(p));
 });
+app.get('/docs', (req, res) => res.sendFile(path.join(__dirname, 'public', 'docs.html')));
 app.get('/record/:id', (req, res) => res.sendFile(path.join(__dirname, 'public', 'record.html')));
 
 app.listen(config.port, () => {

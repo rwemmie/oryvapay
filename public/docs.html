@@ -1,0 +1,145 @@
+<!doctype html><html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<script>(function(){var t;try{t=localStorage.getItem('oryva-theme')}catch(e){}if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}document.documentElement.setAttribute('data-theme',t)})();</script>
+<link rel="icon" href="/favicon.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&family=Inter+Tight:wght@600;700;800&family=Poppins:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<title>Docs · OryvaPay</title>
+<style>
+.docs{display:grid;grid-template-columns:230px minmax(0,1fr);gap:56px;padding:32px 0 80px}
+.side{position:sticky;top:84px;align-self:start;max-height:calc(100vh - 100px);overflow:auto}
+.side .t{font-size:12px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 10px 12px}
+.side a{display:block;padding:7px 12px;border-radius:10px;color:var(--ink2);font-size:14px;font-weight:500;transition:background .2s,color .2s}
+.side a:hover{background:var(--surface2);color:var(--ink)}.side a.on{background:var(--surface2);color:var(--ink);font-weight:650;box-shadow:inset 2px 0 0 var(--accent)}
+.dc{max-width:780px}
+.dc h1{font-family:"Inter Tight",Inter,sans-serif;font-size:48px;letter-spacing:-.035em;line-height:1.02;margin:0 0 8px;font-weight:800}
+.dc section{padding:28px 0 32px;border-bottom:1px solid var(--line);scroll-margin-top:80px}
+.dc h2{font-family:"Inter Tight",Inter,sans-serif;font-size:28px;letter-spacing:-.025em;margin:0 0 14px;font-weight:750}
+.dc h3{font-size:17px;margin:22px 0 8px}
+.dc p,.dc li{color:var(--ink2);font-size:15.5px;line-height:1.7}
+.dc a{color:var(--accent);font-weight:550}
+.lead{font-size:18px!important;color:var(--ink)!important}
+.dc code{font-family:"JetBrains Mono",monospace;font-size:12.8px;background:var(--surface2);border:1px solid var(--line);padding:1px 6px;border-radius:6px;word-break:break-word}
+.code{background:#0d1117;color:#e6edf3;border-radius:14px;padding:16px 18px;overflow:auto;font-size:12.8px;line-height:1.6;margin:8px 0 14px}
+.code code{background:none;border:0;padding:0;color:inherit;word-break:normal;white-space:pre}
+.t{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0 16px;display:block;overflow-x:auto}
+.t th{text-align:left;font-size:12px;color:var(--muted);font-weight:650;padding:8px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+.t td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink2)}
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+.cards3 div{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}.cards3 b{display:block;margin-bottom:4px}.cards3 span{font-size:14px;color:var(--muted);line-height:1.5}
+.flow{padding-left:22px}.flow li{margin:0 0 10px;padding-left:4px}
+.ticks{padding-left:20px}.ticks li{margin:0 0 6px}
+.quotes{display:grid;gap:10px;margin:16px 0}
+.quotes blockquote{margin:0;background:var(--surface);border:1px solid var(--line);border-left:3px solid #0070E0;border-radius:12px;padding:14px 16px;font-size:15px;color:var(--ink)}
+.quotes cite{display:block;font-style:normal;font-size:13px;margin-top:6px}
+.ep{border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin:12px 0;background:var(--surface)}
+.eph{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.eph code{background:none;border:0;font-size:14px;font-weight:500;color:var(--ink)}
+.m{font-family:"JetBrains Mono",monospace;font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:6px}
+.m.get{background:rgba(0,112,224,.12);color:#0070E0}.m.post{background:rgba(22,163,74,.13);color:#16a34a}
+.ep p{margin:8px 0 4px;font-size:14.5px}.lab{font-size:11.5px;font-weight:650;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:10px}
+.muted{color:var(--muted)!important;font-size:14px!important}
+.mnav{display:none}
+@media(max-width:900px){.docs{grid-template-columns:1fr;gap:0;padding-top:16px}.side{display:none}.mnav{display:flex;gap:8px;overflow-x:auto;padding:4px 0 14px;position:sticky;top:60px;background:var(--bg);z-index:5;border-bottom:1px solid var(--line);scrollbar-width:none}.mnav a{white-space:nowrap;font-size:13px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink2)}.dc h1{font-size:36px}.cards3{grid-template-columns:1fr}}
+</style></head><body>
+<main class="wrap docs">
+<aside class="side"><div class="t">Documentation</div><nav id="snav"><a href="#overview">Overview</a><a href="#problem">The problem</a><a href="#how">How it works</a><a href="#paypal">Built on PayPal</a><a href="#engine">Verification engine</a><a href="#modes">Modes</a><a href="#records">Intent Records and the hash chain</a><a href="#evidence">Evidence Pack</a><a href="#api">API reference</a><a href="#sandbox">Testing in the PayPal sandbox</a><a href="#selfhost">Self hosting</a><a href="#limits">Limitations</a><a href="#roadmap">Roadmap</a></nav></aside>
+<div class="dc">
+<div class="crumb" style="font-size:13px;color:var(--muted)">OryvaPay docs</div>
+<h1>OryvaPay documentation</h1>
+<p class="muted" style="margin:0 0 6px">Verify intent before payment, on PayPal.</p>
+<nav class="mnav"><a href="#overview">Overview</a><a href="#problem">The problem</a><a href="#how">How it works</a><a href="#paypal">Built on PayPal</a><a href="#engine">Verification engine</a><a href="#modes">Modes</a><a href="#records">Intent Records and the hash chain</a><a href="#evidence">Evidence Pack</a><a href="#api">API reference</a><a href="#sandbox">Testing in the PayPal sandbox</a><a href="#selfhost">Self hosting</a><a href="#limits">Limitations</a><a href="#roadmap">Roadmap</a></nav>
+<section id="overview"><h2>Overview</h2><p class="lead">OryvaPay is an AI verification layer that checks an agent's order against the buyer's intent before PayPal captures the money.</p>
+<p>A shopping agent builds a cart. The buyer approves a PayPal payment with <code>intent: AUTHORIZE</code>, so the funds are held, not taken. OryvaPay then reads the order PayPal actually received, compares every line with what the buyer asked for, and tells PayPal to capture the payment or void the authorization. Every step is written to a tamper evident Intent Record that both buyer and merchant can use as evidence.</p>
+<div class="cards3"><div><b>Hold</b><span>PayPal Orders v2 authorizes the payment. Nothing is captured yet.</span></div><div><b>Verify</b><span>Rule checks for the numbers, AI review for the meaning.</span></div><div><b>Capture or void</b><span>PayPal Payments v2 takes the money only when the order matches.</span></div></div>
+<p>Live demo: <a href="/app">Verify a purchase</a>. Source: <a href="https://github.com/rwemmie/oryvapay" target="_blank" rel="noopener">github.com/rwemmie/oryvapay</a>.</p></section><section id="problem"><h2>The problem</h2><p>AI agents now shop for people. The payment can be perfectly valid while the purchase is not what the buyer asked for.</p>
+<p>When a buyer approves a payment, the authorization proves consent to pay. It does not prove that the order the merchant charged matches what the buyer wanted. Things slip into an agent built checkout:</p>
+<ul class="ticks"><li>Add on warranties and protection plans nobody asked for</li><li>Surprise subscriptions and repeat billing</li><li>Hidden service or handling fees</li><li>A price change after the buyer approved the quote</li><li>Delivery terms that miss the buyer's deadline</li><li>The wrong item, color, size or quantity</li></ul>
+<p>Then the hard question: who pays when an agent buys the wrong thing? Dispute rules were written for humans pressing a buy button.</p>
+<div class="quotes">
+<blockquote>"Seller Protection is only available on eligible unauthorized transactions and items not received claims."<cite><a href="https://www.paypal.ai/us/agent-ready" target="_blank" rel="noopener">PayPal Agent Ready</a></cite></blockquote>
+<blockquote>"Who pays when an AI agent buys the wrong thing?"<cite><a href="https://www.nmi.com/blog/who-pays-when-an-ai-agent-buys-the-wrong-thing/" target="_blank" rel="noopener">NMI, payments industry blog</a></cite></blockquote>
+<blockquote>"Who Said 'Buy'? Agentic Payments and the Evidence Problem."<cite><a href="https://www.lowenstein.com/news-insights/publications/articles/who-said-buy-agentic-payments-and-the-evidence-problem-october-2026-mushahwar-venora-wagner" target="_blank" rel="noopener">Lowenstein Sandler, October 2026</a></cite></blockquote>
+</div>
+<p>Google's <a href="https://ap2-protocol.org/ap2/specification/" target="_blank" rel="noopener">AP2 specification</a> defines mandates and receipts that can serve as dispute evidence, but leaves detailed dispute resolution, evidence retrieval and retention outside its scope. OryvaPay works on the step before that: checking the order while the money is still only held.</p></section><section id="how"><h2>How it works</h2><ol class="flow">
+<li><b>Buyer intent.</b> The buyer writes what they want in plain words. AI turns it into constraints: product, color and size, quantity, max total, merchant, delivery deadline, and whether subscriptions, add ons and service fees are allowed. The buyer reviews and approves them.</li>
+<li><b>Agent builds a cart.</b> A shopping agent picks a merchant from the demo catalog and builds an itemized cart.</li>
+<li><b>PayPal authorize.</b> OryvaPay creates a PayPal order with <code>intent: AUTHORIZE</code> and every line item. The buyer approves in the PayPal popup and OryvaPay authorizes the order. Funds are held.</li>
+<li><b>Verify.</b> OryvaPay reads the order back from PayPal and runs rule checks plus an AI review against the approved constraints.</li>
+<li><b>Capture or void.</b> PASS captures. BLOCK voids the authorization and releases the money. In Approval mode the buyer decides.</li>
+<li><b>Fix order.</b> After a block, the agent rebuilds the cart without what was flagged. That is a new PayPal order and a new approval, recorded as attempt 2.</li>
+</ol></section><section id="paypal"><h2>Built on PayPal</h2><p>PayPal is the payment rail for the whole flow. OryvaPay never touches card data; the buyer approves in PayPal.</p>
+<table class="t"><thead><tr><th>PayPal API</th><th>Used for</th></tr></thead><tbody>
+<tr><td><code>POST /v1/oauth2/token</code></td><td>Client credentials OAuth</td></tr>
+<tr><td><code>POST /v2/checkout/orders</code> with <code>intent: AUTHORIZE</code></td><td>Itemized order for the agent's cart, including each item's product URL and image</td></tr>
+<tr><td>PayPal JavaScript SDK Buttons (<code>intent=authorize</code>)</td><td>Buyer approval popup</td></tr>
+<tr><td><code>POST /v2/checkout/orders/{id}/authorize</code></td><td>Hold the funds after buyer approval</td></tr>
+<tr><td><code>GET /v2/checkout/orders/{id}</code></td><td>Read what the merchant actually charged</td></tr>
+<tr><td><code>POST /v2/payments/authorizations/{id}/capture</code></td><td>Take the money when the order matches intent</td></tr>
+<tr><td><code>POST /v2/payments/authorizations/{id}/void</code></td><td>Release the money when it does not</td></tr>
+</tbody></table>
+<p class="muted">PayPal is a trademark of PayPal, Inc. OryvaPay is an independent hackathon project and runs in the PayPal sandbox only.</p></section><section id="engine"><h2>Verification engine</h2><p>Verification uses the order PayPal returns, not what the agent claims it bought. Two kinds of checks run on every order.</p>
+<h3>Rule checks</h3><p>Deterministic checks for anything numeric or exact:</p>
+<table class="t"><thead><tr><th>Check</th><th>id</th><th>Fails when</th></tr></thead><tbody>
+<tr><td>Quantity</td><td><code>quantity</code></td><td>The charged quantity differs from the request</td></tr>
+<tr><td>Budget</td><td><code>budget</code></td><td>The total is over the buyer's max total</td></tr>
+<tr><td>Merchant</td><td><code>merchant</code></td><td>The merchant is not allowed or not verified</td></tr>
+<tr><td>Color and size</td><td><code>attributes</code></td><td>Attributes differ from the request</td></tr>
+</tbody></table>
+<h3>Sneaky charges detector</h3>
+<table class="t"><thead><tr><th>Category</th><th>id</th><th>Fails when</th></tr></thead><tbody>
+<tr><td>Add ons and warranties</td><td><code>addons</code></td><td>An extra line such as a protection plan was added without permission</td></tr>
+<tr><td>Surprise subscriptions</td><td><code>recurring</code></td><td>A recurring item appears and subscriptions are not allowed</td></tr>
+<tr><td>Hidden fees</td><td><code>service_fees</code></td><td>A service or handling fee appears and fees are not allowed</td></tr>
+<tr><td>Price change after approval</td><td><code>price_change</code></td><td>A unit price differs from what the agent quoted</td></tr>
+<tr><td>Delivery terms</td><td><code>delivery</code></td><td>The delivery date misses the buyer's deadline</td></tr>
+</tbody></table>
+<h3>AI check</h3><p>The AI reviews meaning: does the item charged actually match the product the buyer described (<code>product_match</code>)? It also writes the plain words explanation shown to the buyer. The live demo uses <b>openai/gpt-oss-120b</b> on Groq through an OpenAI compatible API. If no AI key is set, a local heuristic runs instead and the UI says so.</p></section><section id="modes"><h2>Modes</h2><table class="t"><thead><tr><th>Mode</th><th>Behavior</th><th>Agent quoted $74.99, PayPal order says $79.99</th></tr></thead><tbody>
+<tr><td><b>Strict</b></td><td>Any mismatch blocks the payment.</td><td>BLOCK, authorization voided</td></tr>
+<tr><td><b>Flexible</b></td><td>Price differences inside the tolerance (default $5.00) are allowed. Everything else blocks.</td><td>PASS, $79.99 captured</td></tr>
+<tr><td><b>Approval</b></td><td>Problems are flagged and the buyer decides before any capture.</td><td>NEEDS_APPROVAL, buyer approves or rejects</td></tr>
+</tbody></table></section><section id="records"><h2>Intent Records and the hash chain</h2><p>Each purchase gets an Intent Record such as <code>IR-20261112-23E2BF</code>. It stores the buyer's words, the approved constraints, every cart attempt with product links, PayPal order, authorization and capture IDs, and the verdict with every check.</p>
+<p>Every event is chained with SHA-256:</p><pre class="code"><code>hash = sha256(prevHash + canonicalJSON({ seq, type, at, data }))</code></pre><p>Event types: <code>request_received</code>, <code>constraints_approved</code>, <code>agent_cart_built</code>, <code>paypal_order_created</code>, <code>buyer_approved_authorization</code>, <code>verification_result</code>, <code>payment_captured</code>, <code>authorization_voided</code>, <code>buyer_decision</code>, <code>agent_cart_rebuilt</code>. Changing any past event breaks the chain, and the record page shows where. Each record has a buyer view and a merchant view.</p></section><section id="evidence"><h2>Evidence Pack</h2><p>Every record can be exported as a printable Evidence Pack at <code>/record/{id}/evidence</code> (save as PDF from the browser) or as JSON at <code>/api/records/{id}/download</code> (format <code>oryvapay.intent-record.v1</code>). It includes the request, constraints, each line charged with its product page, the PayPal IDs, the verdict and the hash chain, so a merchant can show the charged order matched the buyer's own approved intent.</p></section><section id="api"><h2>API reference</h2><div class="ep"><div class="eph"><span class="m get">GET</span><code>/api/config</code></div><p>Runtime status: whether PayPal and AI are live, the PayPal client ID for the JS SDK, scenarios and modes.</p><div class="lab">Response</div><pre class="code"><code>{ &quot;paypalLive&quot;: true, &quot;aiLive&quot;: true, &quot;paypalEnv&quot;: &quot;sandbox&quot;,
+  &quot;paypalClientId&quot;: &quot;...&quot;, &quot;aiModel&quot;: &quot;openai/gpt-oss-120b&quot;,
+  &quot;scenarios&quot;: {...}, &quot;modes&quot;: {...}, &quot;demoVideo&quot;: null }</code></pre></div><div class="ep"><div class="eph"><span class="m post">POST</span><code>/api/intent</code></div><p>Turn plain words into constraints.</p><div class="lab">Request</div><pre class="code"><code>{ &quot;request&quot;: &quot;Black running shoes, size 10, under $80, by Friday&quot; }</code></pre><div class="lab">Response</div><pre class="code"><code>{ &quot;constraints&quot;: { &quot;product&quot;: { &quot;category&quot;: &quot;running shoes&quot;,
+  &quot;attributes&quot;: { &quot;color&quot;: &quot;black&quot;, &quot;size&quot;: &quot;10&quot; } }, &quot;quantity&quot;: 1,
+  &quot;maxBudget&quot;: 80, &quot;allowedMerchants&quot;: [], &quot;deliveryDeadline&quot;: &quot;...&quot;,
+  &quot;recurringAllowed&quot;: false, &quot;extrasAllowed&quot;: false,
+  &quot;serviceFeesAllowed&quot;: false, &quot;parsedBy&quot;: &quot;ai&quot; } }</code></pre></div><div class="ep"><div class="eph"><span class="m post">POST</span><code>/api/records</code></div><p>Create an Intent Record and let the agent build the first cart. mode is strict, flexible or approval. scenario picks the demo merchant behavior (for example warranty, clean, price_change).</p><div class="lab">Request</div><pre class="code"><code>{ &quot;request&quot;: &quot;...&quot;, &quot;constraints&quot;: {...}, &quot;mode&quot;: &quot;strict&quot;,
+  &quot;tolerance&quot;: 5, &quot;scenario&quot;: &quot;warranty&quot; }</code></pre><div class="lab">Response</div><pre class="code"><code>{ &quot;id&quot;: &quot;IR-20261112-23E2BF&quot;, &quot;status&quot;: &quot;OPEN&quot;, &quot;attempts&quot;: [ { &quot;n&quot;: 1,
+  &quot;cart&quot;: { &quot;items&quot;: [ { &quot;sku&quot;: &quot;SL-AERO-BLK-10&quot;,
+  &quot;url&quot;: &quot;/store/stridelab/aero-runner-black&quot;, ... } ] } } ] }</code></pre></div><div class="ep"><div class="eph"><span class="m post">POST</span><code>/api/records/{id}/order</code></div><p>Create the PayPal order (intent AUTHORIZE) for the latest attempt.</p><div class="lab">Response</div><pre class="code"><code>{ &quot;id&quot;: &quot;6TF029115U822433D&quot;, &quot;approveUrl&quot;: &quot;https://www.sandbox.paypal.com/checkoutnow?token=...&quot; }</code></pre></div><div class="ep"><div class="eph"><span class="m post">POST</span><code>/api/records/{id}/authorize</code></div><p>After buyer approval, authorize the order. Funds are held.</p><div class="lab">Response</div><pre class="code"><code>{ &quot;authorizationId&quot;: &quot;1AL2357750936571K&quot;, &quot;status&quot;: &quot;CREATED&quot;,
+  &quot;amount&quot;: { &quot;currency_code&quot;: &quot;USD&quot;, &quot;value&quot;: &quot;87.98&quot; } }</code></pre></div><div class="ep"><div class="eph"><span class="m post">POST</span><code>/api/records/{id}/verify</code></div><p>Read the order from PayPal, verify it, then capture, void or wait for the buyer. Returns the full record with the chain status.</p><div class="lab">Response</div><pre class="code"><code>{ &quot;id&quot;: &quot;...&quot;, &quot;status&quot;: &quot;BLOCKED&quot;, &quot;attempts&quot;: [ { &quot;verification&quot;: {
+  &quot;verdict&quot;: &quot;BLOCK&quot;, &quot;failedChecks&quot;: [&quot;addons&quot;, &quot;budget&quot;], ... } } ],
+  &quot;chain&quot;: { &quot;valid&quot;: true, &quot;events&quot;: 7 } }</code></pre></div><div class="ep"><div class="eph"><span class="m post">POST</span><code>/api/records/{id}/decision</code></div><p>Approval mode only. Capture or void based on the buyer.</p><div class="lab">Request</div><pre class="code"><code>{ &quot;approve&quot;: true }</code></pre><div class="lab">Response</div><pre class="code"><code>Full record</code></pre></div><div class="ep"><div class="eph"><span class="m post">POST</span><code>/api/records/{id}/fix</code></div><p>After a block, the agent rebuilds the cart without the flagged items as a new attempt.</p><div class="lab">Response</div><pre class="code"><code>Full record with a new attempt</code></pre></div><div class="ep"><div class="eph"><span class="m get">GET</span><code>/api/records</code></div><p>List records.</p></div><div class="ep"><div class="eph"><span class="m get">GET</span><code>/api/records/{id}</code></div><p>One record with chain verification.</p></div><div class="ep"><div class="eph"><span class="m get">GET</span><code>/api/records/{id}/download</code></div><p>The record as a JSON file.</p></div><div class="ep"><div class="eph"><span class="m get">GET</span><code>/api/catalog</code></div><p>Demo merchants and products.</p></div><div class="ep"><div class="eph"><span class="m get">GET</span><code>/api/health</code></div><p>Health check.</p><div class="lab">Response</div><pre class="code"><code>{ &quot;ok&quot;: true }</code></pre></div><p class="muted">Pages: <code>/app</code>, <code>/records</code>, <code>/record/{id}</code>, <code>/record/{id}/evidence</code>, <code>/store/{merchant}/{slug}</code> (demo store product pages).</p></section><section id="sandbox"><h2>Testing in the PayPal sandbox</h2><p>Everything runs in the PayPal sandbox. No real money moves.</p>
+<ol class="flow">
+<li>Open <a href="/app">Verify a purchase</a>, keep the example request, pick a scenario and a mode, and approve the rules.</li>
+<li>Click the PayPal button. In the PayPal window, log in with a PayPal sandbox buyer account, or choose <b>Pay with Debit or Credit Card</b> and use a PayPal sandbox test card such as <code>4032 0393 1798 4658</code> with any future expiry, any 3 digit CVV and a US billing address. PayPal may ask you to create a sandbox account with a password; any test email and password work.</li>
+<li>After approval, OryvaPay authorizes, verifies and captures or voids automatically. The <b>Protection Plan</b> scenario in Strict mode shows a block; then use <b>Fix order</b> to see the clean attempt captured.</li>
+<li>If the popup is blocked, use "Open PayPal in this tab".</li>
+</ol></section><section id="selfhost"><h2>Self hosting</h2><pre class="code"><code>git clone https://github.com/rwemmie/oryvapay
+cd oryvapay &amp;&amp; npm install
+npm start                # http://localhost:3000
+npm test                 # end to end test (BASE=http://localhost:3000)</code></pre><table class="t"><thead><tr><th>Variable</th><th>Required</th><th>Notes</th></tr></thead><tbody>
+<tr><td><code>PAYPAL_CLIENT_ID</code></td><td>for real PayPal</td><td>Sandbox REST app client ID</td></tr>
+<tr><td><code>PAYPAL_CLIENT_SECRET</code></td><td>for real PayPal</td><td>Sandbox REST app secret. Never commit it.</td></tr>
+<tr><td><code>PAYPAL_ENV</code></td><td>no</td><td><code>sandbox</code> (default) or <code>live</code></td></tr>
+<tr><td><code>AI_API_KEY</code></td><td>for real AI</td><td>Key for any OpenAI compatible API</td></tr>
+<tr><td><code>AI_BASE_URL</code></td><td>no</td><td>Default <code>https://api.x.ai/v1</code>. The demo uses <code>https://api.groq.com/openai/v1</code></td></tr>
+<tr><td><code>AI_MODEL</code></td><td>no</td><td>Default <code>grok-4</code>. The demo uses <code>openai/gpt-oss-120b</code></td></tr>
+<tr><td><code>AI_TIMEOUT_MS</code></td><td>no</td><td>Default 45000</td></tr>
+<tr><td><code>DEMO_VIDEO_URL</code></td><td>no</td><td>YouTube link for the landing page demo player</td></tr>
+<tr><td><code>PORT</code></td><td>no</td><td>Default 3000</td></tr>
+<tr><td><code>DATA_DIR</code></td><td>no</td><td>Where <code>records.json</code> is stored, default <code>data</code></td></tr>
+<tr><td><code>DEMO_MODE</code></td><td>no</td><td><code>true</code> forces demo mode</td></tr>
+</tbody></table><p>Without PayPal keys OryvaPay runs a simulated PayPal; without an AI key it uses a local heuristic. The UI always says which is active.</p></section><section id="limits"><h2>Limitations</h2><ul class="ticks"><li>PayPal sandbox only. No real money, and <code>PAYPAL_ENV=live</code> has not been tested.</li>
+<li>The hosted demo runs on a free tier with no disk, so Intent Records reset on every deploy or restart. Download the JSON or Evidence Pack to keep one.</li>
+<li>Records are stored in a JSON file, not a database.</li>
+<li>The shopping agent and the StrideLab and PeakGear stores are demo simulations with a small catalog. Product images are AI generated renders of unbranded products.</li>
+<li>Card payments go through PayPal's own approval window; direct card processing is not enabled on the sandbox merchant.</li></ul></section><section id="roadmap"><h2>Roadmap</h2><ul class="ticks"><li>Persistent storage for Intent Records</li><li>Accept agent mandates and receipts in the AP2 format as intent input</li><li>Merchant webhooks when a payment is blocked</li><li>More sneaky charge categories and per buyer rules</li><li>Live PayPal environment after review</li></ul></section>
+</div></main>
+<script type="module">
+import { header, footer } from '/common.js'; header('docs'); footer();
+const links=[...document.querySelectorAll('#snav a')];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}}),{rootMargin:'-20% 0px -70% 0px'});
+document.querySelectorAll('.dc section').forEach(s=>io.observe(s));
+</script>
+</body></html>

@@ -62,7 +62,7 @@ export async function header(active) {
   el.className = 'top';
   el.innerHTML = `<div class="wrap">
     <a class="brand" href="/" aria-label="OryvaPay home">${brandHTML()}</a>
-    <nav class="links"><a href="/app" class="${active === 'verify' ? 'on' : ''}">Verify a purchase</a><a href="/records" class="${active === 'records' ? 'on' : ''}">Intent Records</a></nav>
+    <nav class="links"><a href="/app" class="${active === 'verify' ? 'on' : ''}">Verify a purchase</a><a href="/records" class="${active === 'records' ? 'on' : ''}">Intent Records</a><a href="/docs" class="${active === 'docs' ? 'on' : ''}">Docs</a></nav>
     <div class="spacer"></div>
     <span class="pill hidesm ${cfg.paypalLive ? 'live' : 'demo'}"><span class="dot"></span>Payments by PayPal (${cfg.paypalLive ? esc(cfg.paypalEnv) : 'demo'})</span>
     <span class="pill hidesm ${cfg.aiLive ? 'live' : 'demo'}"><span class="dot"></span>AI ${cfg.aiLive ? esc(cfg.aiModel) : 'demo'}</span>
@@ -79,7 +79,7 @@ export async function header(active) {
 export function footer() {
   const f = document.createElement('footer');
   f.className = 'ft';
-  f.innerHTML = `<div class="wrap"><a class="brand" href="/">${brandHTML()}</a><span>Verify intent before payment · PayPal Orders v2 and Payments v2 · AI verification · MIT license</span></div>`;
+  f.innerHTML = `<div class="wrap"><a class="brand" href="/">${brandHTML()}</a><span><a href="/docs" style="color:inherit;text-decoration:underline">Docs</a> · Verify intent before payment · PayPal Orders v2 and Payments v2 · AI verification · MIT license</span></div>`;
   document.body.append(f);
 }
 
