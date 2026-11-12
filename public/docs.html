@@ -5,12 +5,12 @@
 <link rel="stylesheet" href="/styles.css">
 <title>Docs · OryvaPay</title>
 <style>
-.docs{display:grid;grid-template-columns:230px minmax(0,1fr);gap:56px;padding:32px 0 80px}
+.docs{display:grid;grid-template-columns:230px minmax(0,1fr);gap:56px;padding-top:32px;padding-bottom:80px}
 .side{position:sticky;top:84px;align-self:start;max-height:calc(100vh - 100px);overflow:auto}
 .side .t{font-size:12px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 10px 12px}
 .side a{display:block;padding:7px 12px;border-radius:10px;color:var(--ink2);font-size:14px;font-weight:500;transition:background .2s,color .2s}
 .side a:hover{background:var(--surface2);color:var(--ink)}.side a.on{background:var(--surface2);color:var(--ink);font-weight:650;box-shadow:inset 2px 0 0 var(--accent)}
-.dc{max-width:780px}
+.dc{max-width:780px;min-width:0}.docs>*{min-width:0}
 .dc h1{font-family:"Inter Tight",Inter,sans-serif;font-size:48px;letter-spacing:-.035em;line-height:1.02;margin:0 0 8px;font-weight:800}
 .dc section{padding:28px 0 32px;border-bottom:1px solid var(--line);scroll-margin-top:80px}
 .dc h2{font-family:"Inter Tight",Inter,sans-serif;font-size:28px;letter-spacing:-.025em;margin:0 0 14px;font-weight:750}
@@ -38,7 +38,7 @@
 .ep p{margin:8px 0 4px;font-size:14.5px}.lab{font-size:11.5px;font-weight:650;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:10px}
 .muted{color:var(--muted)!important;font-size:14px!important}
 .mnav{display:none}
-@media(max-width:900px){.docs{grid-template-columns:1fr;gap:0;padding-top:16px}.side{display:none}.mnav{display:flex;gap:8px;overflow-x:auto;padding:4px 0 14px;position:sticky;top:60px;background:var(--bg);z-index:5;border-bottom:1px solid var(--line);scrollbar-width:none}.mnav a{white-space:nowrap;font-size:13px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink2)}.dc h1{font-size:36px}.cards3{grid-template-columns:1fr}}
+@media(max-width:900px){.docs{grid-template-columns:1fr;gap:0;padding-top:16px}.mnav{margin:0 -4px}.side{display:none}.mnav{display:flex;gap:8px;overflow-x:auto;padding:4px 0 14px;position:sticky;top:60px;background:var(--bg);z-index:5;border-bottom:1px solid var(--line);scrollbar-width:none}.mnav a{white-space:nowrap;font-size:13px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink2)}.dc h1{font-size:36px}.cards3{grid-template-columns:1fr}}
 </style></head><body>
 <main class="wrap docs">
 <aside class="side"><div class="t">Documentation</div><nav id="snav"><a href="#overview">Overview</a><a href="#problem">The problem</a><a href="#how">How it works</a><a href="#paypal">Built on PayPal</a><a href="#engine">Verification engine</a><a href="#modes">Modes</a><a href="#records">Intent Records and the hash chain</a><a href="#evidence">Evidence Pack</a><a href="#api">API reference</a><a href="#sandbox">Testing in the PayPal sandbox</a><a href="#selfhost">Self hosting</a><a href="#limits">Limitations</a><a href="#roadmap">Roadmap</a></nav></aside>
