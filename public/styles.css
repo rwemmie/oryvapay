@@ -312,3 +312,8 @@ footer.ft .brand .wm{font-size:16px}
 .fade{animation:fd .4s ease both}
 @keyframes fd{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* mobile overflow fix: long PayPal IDs and hashes wrap instead of widening the page */
+.grid > *{min-width:0}
+.kv > *{min-width:0;overflow-wrap:anywhere}
+.card code,.timeline code{overflow-wrap:anywhere;word-break:break-all}
+@media(max-width:640px){.kv{grid-template-columns:1fr;gap:2px 0}.kv .k{margin-top:8px}}
