@@ -144,6 +144,7 @@ async function afterApproval() {
   showErr('#err2');
   try {
     await api('POST', `/api/records/${state.record.id}/authorize`);
+    $('#payArea').innerHTML = '<span class="pill live"><span class="dot"></span>Authorized in PayPal</span>';
     await refresh();
     mark('#s2', 'done'); unlock('#s3'); renderStepper(3);
     const a = state.record.attempts.at(-1);

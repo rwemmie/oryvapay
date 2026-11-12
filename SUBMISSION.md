@@ -5,7 +5,7 @@ Verify intent before payment.
 
 ## Short description (about 150 words)
 
-AI shopping agents are starting to spend real money, and a payment can be valid while the purchase is wrong: a sneaked in warranty, a hidden monthly membership, two pairs instead of one, a look-alike merchant. Dispute rules were written for humans pressing a buy button, and Google's AP2 leaves evidence retention out of scope.
+AI shopping agents are starting to spend real money, and a payment can be valid while the purchase is wrong: a sneaked in warranty, a hidden monthly membership, two pairs instead of one, a look-alike merchant. Dispute rules were written for humans pressing a buy button.
 
 OryvaPay is an independent AI verification layer that sits between the agent and the money. The buyer approves a PayPal authorization, so funds are held, not taken. OryvaPay reads the order PayPal actually received, runs rule checks for the numbers and an AI review for the meaning, then captures, voids, or asks the buyer, depending on Strict, Flexible or Approval mode. If blocked, the agent fixes the order and the corrected one is captured.
 
