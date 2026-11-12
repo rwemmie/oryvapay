@@ -61,7 +61,7 @@ OryvaPay is not the only effort in this space and does not claim to be the first
 
 ## AI used
 
-* Any OpenAI compatible chat completions API, configured with `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`. Default is **xAI Grok** (`https://api.x.ai/v1`, `grok-4`). OpenAI works by changing the base URL and model.
+* Any OpenAI compatible chat completions API, configured with `AI_BASE_URL`, `AI_API_KEY`, `AI_MODEL`. The live demo uses **Groq** running **openai/gpt-oss-120b** (`https://api.groq.com/openai/v1`). xAI Grok, OpenAI and Crynux work by changing the base URL and model.
 * AI jobs: parse the plain English request into structured constraints, and review the PayPal order against the intent (product match, extra findings, plain words explanation, risk score).
 * Money logic never depends on the model alone: deterministic rule checks always run, and an AI failure falls back to a local heuristic.
 
@@ -119,7 +119,7 @@ scripts/live-smoke.mjs  Real sandbox order creation check
 ## Built with
 
 * **PayPal** Orders v2 (authorize intent), Payments v2 (capture and void), PayPal JavaScript SDK, PayPal sandbox
-* **AI:** xAI Grok through an OpenAI compatible API (swappable for OpenAI)
+* **AI:** openai/gpt-oss-120b on Groq through an OpenAI compatible API (swappable for xAI Grok, OpenAI or Crynux)
 * Node.js, Express, vanilla HTML, CSS and JavaScript
 
 ## Known limits

@@ -12,7 +12,7 @@ OryvaPay is an independent verification layer between the agent and the money. Y
 Every purchase leaves an Intent Record sealed with a SHA-256 hash chain, plus a one click Dispute Evidence Pack that a buyer or merchant can attach to a PayPal dispute, including the "wrong item" claims that Seller Protection does not cover. Built with PayPal Orders v2, Payments v2 and AI.
 
 ## Built with (Devpost tags)
-paypal, paypal-orders-api, paypal-payments-api, paypal-javascript-sdk, xai, grok, ai, node.js, express, javascript, html, css, render
+paypal, paypal-orders-api, paypal-payments-api, paypal-javascript-sdk, groq, gpt-oss, ai, node.js, express, javascript, html, css, render
 
 ## Video script (target 2:45, AI voiceover is fine, no copyrighted music)
 
