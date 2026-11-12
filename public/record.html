@@ -4,9 +4,10 @@
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/styles.css"><title>Intent Record . OryvaPay</title></head>
 <body>
 <main class="wrap">
-  <section class="hero"><div class="row" style="justify-content:space-between"><div><h1 id="title">Intent <span>Record</span></h1><p id="subtitle"></p></div><div class="row"><a class="btn ghost" href="/records">All records</a><a class="btn primary" id="dl">Download JSON</a></div></div></section>
+  <section class="hero"><div class="row" style="justify-content:space-between"><div><h1 id="title">Intent <span>Record</span></h1><p id="subtitle"></p></div><div class="row"><a class="btn ghost" href="/records">All records</a><a class="btn ghost" id="dl">Download JSON</a><a class="btn primary" id="ev" target="_blank">Dispute Evidence Pack</a></div></div></section>
+  <div class="row" style="margin:4px 0 14px"><div class="seg" id="viewSeg"><button data-v="buyer" class="on">Buyer view</button><button data-v="merchant">Merchant view</button></div><span class="hint" id="viewHint" style="margin:0">What you asked for, what was charged, and why.</span></div>
   <div class="grid">
-    <div id="main"></div>
+    <div><div id="merchantPanel" style="display:none"></div><div id="main"></div></div>
     <aside class="side"><section class="card"><div class="hd"><h2>Evidence chain</h2></div><div class="bd"><div id="chainBox"></div><ul class="timeline" id="timeline"></ul></div></section></aside>
   </div>
 </main>
@@ -18,6 +19,27 @@ const r = await api('GET', '/api/records/' + id);
 $('#title').innerHTML = 'Intent Record <span>' + esc(r.id) + '</span>';
 $('#subtitle').innerHTML = `<span class="status ${r.status}">${r.status.replace('_', ' ')}</span> &nbsp; Created ${when(r.createdAt)} . Mode ${esc(r.mode)}`;
 $('#dl').href = '/api/records/' + r.id + '/download';
+$('#ev').href = '/record/' + r.id + '/evidence';
+const last = r.attempts[r.attempts.length - 1];
+const approvedFlags = r.events.some(e => e.type === 'buyer_decision' && e.data.approve);
+$('#merchantPanel').innerHTML = `<div class="merchant fade"><h3>Defend against "wrong item" disputes with this record</h3>
+<p style="margin:0">PayPal's Seller Protection for agentic checkout covers eligible <b>unauthorized transaction</b> and <b>item not received</b> claims. A buyer who says "my AI agent bought the wrong thing" is making a different kind of claim, one that is outside that protection. This Intent Record shows the buyer's own words, the rules they approved, and whether the charged order matched them before capture.</p>
+<ol>
+<li><b>Buyer intent:</b> "${esc(r.request)}"</li>
+<li><b>Order matched intent:</b> ${last?.verification ? (last.verification.verdict === 'PASS' ? 'yes, every check passed before capture' : last.status === 'VOIDED' ? 'no, so the authorization was voided and nothing was captured' : last.status === 'CAPTURED' ? 'flagged, and the buyer explicitly approved the flagged items' : 'flagged, waiting for the buyer') : 'not verified yet'}</li>
+<li><b>PayPal IDs to quote in the dispute:</b> order <code>${esc(last?.orderId || 'none')}</code>, authorization <code>${esc(last?.authorizationId || 'none')}</code>${last?.captureId ? ', capture <code>' + esc(last.captureId) + '</code>' : ''}</li>
+<li><b>Tamper evidence:</b> ${r.events.length} events, hash chain ${r.chain.valid ? 'verified' : 'broken'}</li>
+</ol>
+<div class="row" style="margin-top:14px"><a class="btn primary" href="/record/${r.id}/evidence" target="_blank">Open Dispute Evidence Pack</a><span class="hint" style="margin:0">Print to PDF and attach it to the PayPal Resolution Center case.</span></div>
+<div class="cite">Source: <a href="https://www.paypal.ai/us/agent-ready" target="_blank" rel="noopener">PayPal Agent Ready</a>: "Seller Protection is only available on eligible unauthorized transactions and items not received claims for PayPal Checkout merchants."</div></div>`;
+document.querySelector('#viewSeg').addEventListener('click', e => {
+  const v = e.target.dataset.v; if (!v) return;
+  document.querySelectorAll('#viewSeg button').forEach(b => b.classList.toggle('on', b.dataset.v === v));
+  $('#merchantPanel').style.display = v === 'merchant' ? 'block' : 'none';
+  $('#viewHint').textContent = v === 'merchant' ? 'How a merchant uses this record to answer a dispute.' : 'What you asked for, what was charged, and why.';
+});
+if (location.hash === '#merchant') document.querySelector('#viewSeg [data-v=merchant]').click();
+
 $('#timeline').innerHTML = r.events.map(eventLine).join('');
 $('#chainBox').innerHTML = `<div class="chainok ${r.chain.valid ? '' : 'chainbad'}">${r.chain.valid ? '&#128274; Hash chain verified' : '&#9888; Chain broken at event ' + r.chain.brokenAt}</div><div class="hint" style="margin-bottom:12px">Head hash <code style="word-break:break-all">${esc(r.chain.headHash || '')}</code></div>`;
 const c = r.constraints;

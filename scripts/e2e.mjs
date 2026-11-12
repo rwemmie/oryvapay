@@ -29,6 +29,7 @@ let r = await call('POST', '/api/records', { request: REQUEST, constraints, mode
 r = await pay(r.id);
 expect(last(r).verification.verdict === 'BLOCK', `warranty scenario blocked: ${last(r).verification.failedChecks.join(', ')}`);
 expect(last(r).status === 'VOIDED', 'authorization voided');
+expect(last(r).verification.sneakyCharges.some(x => x.id === 'addons'), 'sneaky charges detector flagged the add-on warranty');
 r = await call('POST', `/api/records/${r.id}/fix`);
 expect(last(r).cart.items.length === 1, 'agent removed the protection plan');
 r = await pay(r.id);
@@ -68,6 +69,12 @@ const list = await call('GET', '/api/records');
 expect(list.length > 0, `records list returns ${list.length} records`);
 const dl = await fetch(`${BASE}/api/records/${r.id}/download`);
 expect(dl.ok && (dl.headers.get('content-disposition') || '').includes('.json'), 'record downloads as JSON');
+
+const ev = await fetch(`${BASE}/record/${r.id}/evidence`);
+const evHtml = await ev.text();
+expect(ev.ok && evHtml.includes('Dispute Evidence Pack') && evHtml.includes(last(r).authorizationId) && evHtml.includes(r.chain.headHash), 'Dispute Evidence Pack has PayPal IDs and head hash');
+const rp = await fetch(`${BASE}/record/${r.id}`);
+expect(rp.ok && (await rp.text()).includes('Merchant view'), 'record page has Merchant view');
 
 console.log(failures ? `\n${failures} check(s) failed` : '\nAll checks passed');
 process.exit(failures ? 1 : 0);

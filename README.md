@@ -2,9 +2,24 @@
 
 **Verify intent before payment.**
 
+> **A payment can be legitimate while the purchase is wrong.**
+
 Your AI shopping agent shouldn't be able to spend your money on something you never agreed to buy.
 
 OryvaPay is an independent AI verification layer for agentic commerce. It sits between an AI shopping agent and the payment. The buyer approves a PayPal **authorization** (funds are held, not taken), OryvaPay checks the order PayPal actually received against what the buyer asked for, and only then **captures** the payment or **voids** the authorization. Every purchase produces a tamper evident **Intent Record** that can be used as evidence if there is ever a dispute.
+
+## What makes OryvaPay different
+
+Most agent payment safety work focuses on whether the agent is allowed to pay at all: hijacked agents, prompt injection, spend caps, payee allowlists. OryvaPay focuses on a different gap: the agent is trusted, the buyer approved the payment, PayPal processed it correctly, and the purchase is still not what the buyer asked for.
+
+1. **Sneaky charges detector.** The headline feature. It reads the order PayPal actually received and catches charges the buyer never agreed to:
+   * hidden service fees
+   * add-on warranties and protection plans
+   * surprise subscriptions and other recurring charges
+   * price changes between the agent's quote and the charge
+   * delivery terms that break the buyer's deadline
+2. **Dispute Evidence Pack.** One click per Intent Record produces a clean, printable page (save as PDF) a buyer or merchant can attach to a PayPal dispute: the request, approved constraints, charged order lines, verdict and reasons, PayPal order, authorization and capture IDs, timeline, and the SHA-256 hash chain.
+3. **Merchant view.** PayPal's [Agent Ready](https://www.paypal.ai/us/agent-ready) page states that Seller Protection "is only available on eligible unauthorized transactions and items not received claims". A buyer saying "my agent bought the wrong thing" is a different claim. The Merchant view of each Intent Record shows how a merchant can use the record to show the charged order matched the buyer's own approved intent before capture.
 
 ## The problem
 
@@ -22,14 +37,15 @@ OryvaPay is not the only effort in this space and does not claim to be the first
 2. **Agent cart.** A shopping agent builds a cart from a mock merchant store. A demo switch lets the agent or merchant sneak in a problem (unapproved $12.99 Protection Plan by default).
 3. **PayPal authorization.** OryvaPay creates a PayPal Orders v2 order with `intent: AUTHORIZE` and itemized line items. The buyer approves in the PayPal popup. Funds are authorized, nothing is captured.
 4. **Verification.** OryvaPay fetches the order back from PayPal (what the merchant actually charged) and runs:
-   * **Rule checks** for the numbers: color and size, quantity, recurring charges, hidden service fees, unapproved add-ons and warranties, merchant, delivery deadline, price change between quote and charge, budget.
+   * **Sneaky charges detector** (rule checks): hidden service fees, add-on warranties, surprise subscriptions, price change after approval, delivery terms.
+   * **Intent match** (rule checks plus AI): color and size, quantity, merchant, budget, and an AI product match.
    * **AI review** for the meaning: does the item really match what the buyer described? Plus a plain words explanation and a risk score.
 5. **Modes** chosen by the buyer:
    * **Strict:** any mismatch blocks capture.
    * **Flexible:** small price differences inside a set tolerance are allowed, everything else blocks.
    * **Approval:** problems are flagged and the buyer decides to capture or void.
 6. **Outcome.** PASS captures the authorization. BLOCK voids it and shows exactly why. **Fix order** asks the agent to rebuild the cart without the flagged items, the buyer approves the new order, verification passes and the payment is captured.
-7. **Intent Record.** Each purchase keeps the original request, approved constraints, merchant order details, AI verification result and reasoning, PayPal order and authorization IDs, and the final payment event (captured or voided) with timestamps. Every event is sealed in a SHA-256 hash chain (`hash = sha256(prevHash + canonicalJSON({seq,type,at,data}))`), so editing any past event breaks the chain. Records can be viewed, listed and downloaded as JSON.
+7. **Intent Record.** Each purchase keeps the original request, approved constraints, merchant order details, AI verification result and reasoning, PayPal order and authorization IDs, and the final payment event (captured or voided) with timestamps. Every event is sealed in a SHA-256 hash chain (`hash = sha256(prevHash + canonicalJSON({seq,type,at,data}))`), so editing any past event breaks the chain. Records can be viewed, listed, downloaded as JSON, and exported as a printable **Dispute Evidence Pack** at `/record/{id}/evidence`. Each record also has a **Merchant view**.
 
 ## PayPal APIs used
 
@@ -58,7 +74,10 @@ npm install
 cp .env.example .env     # optional, add keys for real PayPal sandbox and AI
 npm start                # http://localhost:3000
 npm test                 # end to end test against a running server (BASE=http://localhost:3000)
+node scripts/live-smoke.mjs   # real sandbox: creates an AUTHORIZE order and prints the approval URL
 ```
+
+**Real PayPal sandbox.** With `PAYPAL_CLIENT_ID` and `PAYPAL_CLIENT_SECRET` set, the PayPal Buttons load with `intent=authorize` and the client ID from `/api/config`. Click the yellow PayPal button, log in with a **sandbox personal (buyer) account** from developer.paypal.com > Testing Tools > Sandbox Accounts, and approve. If a popup is blocked, use "Open PayPal in this tab"; PayPal returns to the app and the flow continues automatically.
 
 **Demo mode.** With no keys, OryvaPay runs in clearly labelled demo mode: PayPal responses are simulated with the same shapes as the real API, and a local heuristic stands in for the AI. Real mode switches on automatically when keys exist. The header shows which mode each side is in.
 
@@ -91,8 +110,10 @@ lib/ai.js            Intent parsing and AI review (OpenAI compatible), heuristic
 lib/verify.js        Rule checks, mode logic, verdict
 lib/catalog.js       Mock merchant store and the shopping agent with demo scenarios
 lib/records.js       Intent Records with SHA-256 hash chain
-public/              UI: verify wizard, records dashboard, record detail
+lib/evidence.js      Printable Dispute Evidence Pack
+public/              UI: verify wizard, records dashboard, record detail with Merchant view
 scripts/e2e.mjs      End to end test of every scenario and mode
+scripts/live-smoke.mjs  Real sandbox order creation check
 ```
 
 ## Built with

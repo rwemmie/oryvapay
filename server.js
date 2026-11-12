@@ -6,10 +6,12 @@ import { parseIntent } from './lib/ai.js';
 import { agentBuildCart, SCENARIOS, CATALOG, MERCHANTS } from './lib/catalog.js';
 import * as paypal from './lib/paypal.js';
 import { verify, MODES } from './lib/verify.js';
+import { renderEvidencePack } from './lib/evidence.js';
 import { createRecord, getRecord, listRecords, appendEvent, updateRecord, verifyChain } from './lib/records.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
+app.set('trust proxy', true);
 app.use(express.json({ limit: '200kb' }));
 app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
 
@@ -71,7 +73,8 @@ app.post('/api/records/:id/order', wrap(async (req, res) => {
   const a = lastAttempt(r);
   if (a.orderId && a.status === 'ORDER_CREATED') return res.json({ id: a.orderId, approveUrl: a.approveUrl });
   if (a.status !== 'CART_BUILT') throw bad('This attempt already has a payment. Use Fix order to start a new attempt.');
-  const order = await paypal.createOrder(a.cart, `${r.id}-${a.n}`);
+  const origin = `${req.protocol}://${req.get('host')}`;
+  const order = await paypal.createOrder(a.cart, `${r.id}-${a.n}`, { returnUrl: `${origin}/?record=${r.id}&paypal=approved`, cancelUrl: `${origin}/?record=${r.id}&paypal=cancelled` });
   const approveUrl = order.links?.find(l => l.rel === 'approve' || l.rel === 'payer-action')?.href;
   updateRecord(r.id, x => Object.assign(lastAttempt(x), { orderId: order.id, approveUrl, status: 'ORDER_CREATED' }));
   appendEvent(r.id, 'paypal_order_created', { attempt: a.n, orderId: order.id, intent: 'AUTHORIZE', amount: order.purchase_units?.[0]?.amount || null, simulated: !config.paypalLive });
@@ -151,6 +154,10 @@ app.get('/api/records/:id/download', wrap(async (req, res) => {
   const r = withChain(load(req.params.id));
   res.setHeader('Content-Disposition', `attachment; filename="${r.id}.json"`);
   res.type('application/json').send(JSON.stringify({ format: 'oryvapay.intent-record.v1', hashAlgorithm: 'sha256(prevHash + canonicalJSON({seq,type,at,data}))', ...r }, null, 2));
+}));
+
+app.get('/record/:id/evidence', wrap(async (req, res) => {
+  res.type('html').send(renderEvidencePack(withChain(load(req.params.id))));
 }));
 
 app.get('/record/:id', (req, res) => res.sendFile(path.join(__dirname, 'public', 'record.html')));

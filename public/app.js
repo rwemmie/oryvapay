@@ -18,6 +18,25 @@ $('#scenario').innerHTML = Object.entries(cfg.scenarios).map(([k, v]) => `<optio
 setMode('strict');
 $('#modeSeg').addEventListener('click', e => { if (e.target.dataset.m) setMode(e.target.dataset.m); });
 renderStepper(1);
+resumeFromPayPal();
+
+async function resumeFromPayPal() {
+  const q = new URLSearchParams(location.search);
+  const id = q.get('record');
+  if (!id) return;
+  history.replaceState(null, '', '/');
+  try {
+    setRecord(await api('GET', `/api/records/${id}`));
+    state.constraints = state.record.constraints; state.mode = state.record.mode;
+    $('#req').value = state.record.request;
+    mark('#s1', 'done'); $('#s1 .hd .sub').textContent = `"${state.record.request}" . ${state.record.mode} mode`;
+    unlock('#s2'); renderCart(); renderStepper(2);
+    const a = state.record.attempts.at(-1);
+    if (q.get('paypal') === 'approved' && a.status === 'ORDER_CREATED') await afterApproval();
+    else if (a.verification) { unlock('#s3'); renderVerdict(); }
+    else if (q.get('paypal') === 'cancelled') showErr('#err2', 'PayPal approval was cancelled. Nothing was charged.');
+  } catch (err) { showErr('#err1', err); }
+}
 
 function setMode(m) {
   state.mode = m;
@@ -96,7 +115,11 @@ function renderCart() {
 function renderPay() {
   const area = $('#payArea');
   if (cfg.paypalLive) {
-    area.innerHTML = '<div id="paypal-buttons"></div>';
+    area.innerHTML = '<div id="paypal-buttons"></div><a href="#" class="altpay" id="altPay">Popup blocked? Open PayPal in this tab</a>';
+    $('#altPay').addEventListener('click', async e => {
+      e.preventDefault();
+      try { const o = await api('POST', `/api/records/${state.record.id}/order`); location.href = o.approveUrl; } catch (err) { showErr('#err2', err); }
+    });
     loadSdk().then(() => {
       window.paypal.Buttons({
         style: { layout: 'horizontal', color: 'gold', shape: 'pill', label: 'paypal', tagline: false, height: 45 },
@@ -165,19 +188,29 @@ function renderVerdict() {
   const icon = { PASS: '&#10003;', BLOCK: '&#10005;', NEEDS_APPROVAL: '!' }[v.verdict];
   const checks = [...v.checks].sort((x, y) => ({ fail: 0, warn: 1, pass: 2 }[x.status] - { fail: 0, warn: 1, pass: 2 }[y.status]));
   let outcome = '';
-  if (a.status === 'CAPTURED') outcome = `<div class="outcome" style="background:var(--okbg);border-color:#bfe8d3"><div class="txt"><b>Payment captured: ${usd(a.finalEvent?.amount?.value)}</b><div class="hint">Capture ID <code>${esc(a.captureId)}</code>. The Intent Record is sealed.</div></div><a class="btn ok" href="/record/${r.id}">View Intent Record</a><button class="btn ghost" onclick="location.reload()">New purchase</button></div>`;
-  else if (a.status === 'VOIDED') outcome = `<div class="outcome" style="background:var(--badbg);border-color:#f6c5c7"><div class="txt"><b>Authorization voided. ${usd(a.authorization?.amount?.value)} released back to you.</b><div class="hint">Nothing was charged. Ask the agent to fix the order, and you will approve the corrected one.</div></div><button class="btn primary" id="fixBtn">Fix order</button><a class="btn ghost" href="/record/${r.id}">View record</a></div>`;
+  if (a.status === 'CAPTURED') outcome = `<div class="outcome" style="background:var(--okbg);border-color:#bfe8d3"><div class="txt"><b>Payment captured: ${usd(a.finalEvent?.amount?.value)}</b><div class="hint">Capture ID <code>${esc(a.captureId)}</code>. The Intent Record is sealed.</div></div><a class="btn ok" href="/record/${r.id}">View Intent Record</a><a class="btn ghost" href="/record/${r.id}/evidence" target="_blank">Evidence Pack</a><button class="btn ghost" onclick="location.reload()">New purchase</button></div>`;
+  else if (a.status === 'VOIDED') outcome = `<div class="outcome" style="background:var(--badbg);border-color:#f6c5c7"><div class="txt"><b>Authorization voided. ${usd(a.authorization?.amount?.value)} released back to you.</b><div class="hint">Nothing was charged. Ask the agent to fix the order, and you will approve the corrected one.</div></div><button class="btn primary" id="fixBtn">Fix order</button><a class="btn ghost" href="/record/${r.id}/evidence" target="_blank">Evidence Pack</a></div>`;
   else if (a.status === 'AWAITING_APPROVAL') outcome = `<div class="outcome" style="background:var(--warnbg);border-color:#f3dca5"><div class="txt"><b>Your call.</b><div class="hint">Funds are still only authorized. Approve to capture anyway, or reject to void.</div></div><button class="btn ok" id="apBtn">Approve and pay</button><button class="btn bad" id="rjBtn">Reject and void</button></div>`;
 
   $('#verifyBody').innerHTML = `<div class="fade">
     <div class="verdict ${v.verdict}"><div class="ic">${icon}</div><div><h3>${esc(v.headline)}</h3><p>Mode: <b>${esc(r.mode)}</b>${r.mode === 'flexible' ? ` (tolerance ${usd(r.tolerance)})` : ''} . Merchant charged ${usd(v.order.total)}${v.riskScore != null ? ` . Risk ${v.riskScore}/100` : ''}</p></div></div>
+    ${v.sneakyCharges?.length ? `<div class="sneakhit"><b>Sneaky charge${v.sneakyCharges.length > 1 ? 's' : ''} caught:</b> ${v.sneakyCharges.map(x => esc(x.label)).join(', ')}. The PayPal payment was valid, but this is not what you agreed to buy.</div>` : ''}
     <div class="why"><div class="k">Why, in plain words</div>${esc(v.explanation)}<div class="hint">Reviewed by ${esc(v.reviewedBy)}</div></div>
-    <div class="checks">${checks.map(c => `<div class="check ${c.status}"><span class="st">${c.status === 'pass' ? '&#10003;' : c.status === 'warn' ? '!' : '&#10005;'}</span><div><div class="t">${esc(c.label)} <span class="src ${c.source === 'ai' ? 'ai' : ''}">${c.source === 'ai' ? 'AI' : 'Rule'}</span></div><div class="d">${esc(c.detail)}</div></div></div>`).join('')}</div>
+    ${checkGroups(checks)}
     ${outcome}</div>`;
   if (a.status === 'CAPTURED') { mark('#s3', 'done'); renderStepper(4); }
   $('#fixBtn')?.addEventListener('click', e => busy(e.currentTarget, 'Agent is fixing the order...', fixOrder));
   $('#apBtn')?.addEventListener('click', e => busy(e.currentTarget, 'Capturing...', () => decide(true)));
   $('#rjBtn')?.addEventListener('click', e => busy(e.currentTarget, 'Voiding...', () => decide(false)));
+}
+
+function checkGroups(checks) {
+  const card = c => `<div class="check ${c.status}"><span class="st">${c.status === 'pass' ? '&#10003;' : c.status === 'warn' ? '!' : '&#10005;'}</span><div><div class="t">${esc(c.label)} <span class="src ${c.source === 'ai' ? 'ai' : ''}">${c.source === 'ai' ? 'AI' : 'Rule'}</span></div><div class="d">${esc(c.detail)}</div></div></div>`;
+  const grp = (title, list) => {
+    const bad = list.filter(c => c.status === 'fail').length;
+    return `<div class="grouphd">${title}<span class="cnt ${bad ? 'bad' : 'ok'}">${bad ? bad + ' caught' : 'all clear'}</span></div><div class="checks">${list.map(card).join('')}</div>`;
+  };
+  return grp('&#128269; Sneaky charges detector', checks.filter(c => c.group === 'sneaky')) + grp('&#127919; Intent match', checks.filter(c => c.group !== 'sneaky'));
 }
 
 async function decide(approve) {
