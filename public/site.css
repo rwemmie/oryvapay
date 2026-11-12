@@ -327,27 +327,27 @@ body.site{overflow-x:hidden}
 /* phone timeline animation (class .play on .stage) */
 .a1,.a2,.a3,.a4,.a5{opacity:0;transform:translateY(10px)}
 .play .a1,.play .a2,.play .a3,.play .a4,.play .a5{animation:lineIn .55s cubic-bezier(.2,.8,.2,1) forwards}
-.play .a1{animation-delay:.2s}.play .a2{animation-delay:.4s}.play .a3{animation-delay:.6s}.play .a4{animation-delay:1.7s}.play .a5{animation-delay:1.9s}
-.play .caret{animation:blink .5s steps(1) .7s 4 forwards}
+.play .a1{animation-delay:1.8s}.play .a2{animation-delay:2s}.play .a3{animation-delay:2.2s}.play .a4{animation-delay:3.3s}.play .a5{animation-delay:3.5s}
+.play .caret{animation:blink .5s steps(1) 2.3s 4 forwards}
 @keyframes blink{0%{opacity:1}50%{opacity:0}}
 .typed{-webkit-mask-image:linear-gradient(90deg,#000 50%,transparent 50%);mask-image:linear-gradient(90deg,#000 50%,transparent 50%);-webkit-mask-size:200% 100%;mask-size:200% 100%;-webkit-mask-position:100% 0;mask-position:100% 0}
-.play .typed{animation:type 1s steps(26) .7s forwards}
+.play .typed{animation:type 1s steps(26) 2.3s forwards}
 @keyframes type{to{-webkit-mask-position:0 0;mask-position:0 0}}
-.play .pscan .bar i{animation:scan 1.1s cubic-bezier(.4,0,.2,1) 2.1s forwards}
+.play .pscan .bar i{animation:scan 1.1s cubic-bezier(.4,0,.2,1) 3.7s forwards}
 @keyframes scan{to{transform:scaleX(1)}}
-.play .pli.flagged:before{animation:fadeIn .35s ease 3.2s forwards}
-.play .pli.flagged .why2{animation:why .3s ease 3.3s forwards}
+.play .pli.flagged:before{animation:fadeIn .35s ease 4.8s forwards}
+.play .pli.flagged .why2{animation:why .3s ease 4.9s forwards}
 @keyframes why{to{opacity:1;height:14px}}
-.play .lic.swap{animation:toRed .3s ease 3.2s forwards}
+.play .lic.swap{animation:toRed .3s ease 4.8s forwards}
 @keyframes toRed{to{background:rgba(239,68,68,.16);color:#ef4444}}
-.play .lic.swap .i1{animation:fadeOut2 .2s ease 3.2s forwards}.play .lic.swap .i2{animation:fadeIn .2s ease 3.3s forwards}
+.play .lic.swap .i1{animation:fadeOut2 .2s ease 4.8s forwards}.play .lic.swap .i2{animation:fadeIn .2s ease 4.9s forwards}
 @keyframes fadeOut2{to{opacity:0}}
-.play .pli.flagged b{animation:redTxt .3s ease 3.2s forwards}
+.play .pli.flagged b{animation:redTxt .3s ease 4.8s forwards}
 @keyframes redTxt{to{color:#ef4444}}
-.play .dim{animation:fadeIn .35s ease 4.1s forwards}
-.play .sheet{animation:sheetUp .7s cubic-bezier(.2,1.25,.35,1) 4.1s forwards}
+.play .dim{animation:fadeIn .35s ease 5.7s forwards}
+.play .sheet{animation:sheetUp .7s cubic-bezier(.2,1.25,.35,1) 5.7s forwards}
 @keyframes sheetUp{to{transform:none}}
-.play .toast{animation:toast 3.2s cubic-bezier(.2,1.2,.35,1) 5.1s forwards}
+.play .toast{animation:toast 3.2s cubic-bezier(.2,1.2,.35,1) 6.7s forwards}
 @keyframes toast{0%{transform:translateY(-130%);opacity:0}14%{transform:none;opacity:1}86%{transform:none;opacity:1}100%{transform:translateY(-130%);opacity:0}}
 .phone.back{animation:none}
 .play .phone.back{animation:backIn .9s cubic-bezier(.2,.8,.2,1) both}
@@ -369,7 +369,7 @@ body.site{overflow-x:hidden}
 .qc,.sc,.fs,.st3,.bw,.chainv,.mtab,.side2{border-radius:16px}
 .mpanel{border-radius:20px}
 /* in-app scroll so the flagged line clears the tab bar */
-.play .front .pad{animation:appScroll .6s cubic-bezier(.3,.7,.2,1) 2.8s forwards}
+.play .front .pad{animation:appScroll .6s cubic-bezier(.3,.7,.2,1) 4.4s forwards}
 @keyframes appScroll{to{transform:translateY(-92px)}}
 .front .appbar.main{position:relative;z-index:2;background:var(--pbg)}
 .front .sbar{position:relative;z-index:2;background:var(--pbg)}
@@ -436,3 +436,47 @@ body.site{overflow-x:hidden}
 .plen{margin-left:auto;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.1);font-size:12px}
 @media(max-width:600px){.pmid b{font-size:20px}.pmid > span:not(.playbtn){font-size:13px}.playbtn{width:56px;height:56px}.pmid .btn{display:none}.pbar{padding:10px 14px;font-size:11px}.player{border-radius:16px}}
 @media(max-width:600px){.pmid > span:not(.playbtn){display:none}.pbar{display:none}.pmid{gap:8px}}
+
+/* ===== PayPal presence ===== */
+.ppw{font-family:Verdana,"DejaVu Sans",Inter,sans-serif;font-weight:800;font-style:italic;letter-spacing:-.04em;white-space:nowrap}
+.ppw b{color:#003087;font-weight:800}.ppw i{color:#0070E0;font-style:italic}
+.ppbadge{display:inline-flex;align-items:center;background:#fff;border-radius:8px;padding:3px 8px;font-size:14px;line-height:1.1;box-shadow:0 0 0 1px rgba(0,48,135,.14)}
+.ppbadge.sm{font-size:10px;padding:1px 5px;border-radius:5px;margin-right:2px}
+.ppkick{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:650;color:var(--ink2);padding:6px 12px 6px 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line2)}
+.ppowered{display:flex;align-items:center;gap:12px;margin-top:24px;padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);font-size:13px;color:var(--muted);max-width:560px}
+.ppowered .ppbadge{font-size:16px;padding:5px 10px;flex:none}
+.trust{margin-top:16px}
+.pill2.pp{background:rgba(0,112,224,.16);color:#5aa9ff}[data-theme=light] .pill2.pp{background:#e6f0fc;color:#003087}
+.ppline{display:flex;align-items:center;gap:4px;margin-top:2px}
+.ppappr{position:absolute;inset:0;z-index:8;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;padding:8px;opacity:1;pointer-events:none}
+.ppsheet{width:100%;background:#fff;color:#111;border-radius:28px;padding:10px 18px 18px;text-align:center}
+.ppsheet .grab{background:rgba(0,0,0,.15)}
+.pph{display:flex;align-items:center;justify-content:space-between}.pph .ppbadge{font-size:18px;box-shadow:none;padding:0}.pph small{font-size:10.5px;font-weight:650;color:#6b7280;background:#f1f3f6;padding:3px 8px;border-radius:999px}
+.ppamt{font-size:34px;font-weight:750;letter-spacing:-.035em;margin:14px 0 2px;font-variant-numeric:tabular-nums}
+.ppto{display:block;font-size:11px;color:#6b7280;margin-bottom:14px}
+.ppbtn{display:flex;align-items:center;justify-content:center;gap:6px;height:46px;border-radius:23px;background:#FFC439;font-size:16px;font-weight:700;color:#111}
+.ppbtn .ppw{font-size:17px}
+.stage:not(.play) .ppappr{opacity:0}
+.play .ppbtn{animation:press .25s ease .9s}
+@keyframes press{50%{transform:scale(.95)}}
+.play .ppsheet{animation:sheetDown .45s cubic-bezier(.4,0,.2,1) 1.25s forwards}
+@keyframes sheetDown{to{transform:translateY(115%)}}
+.play .ppappr{animation:fadeOut2 .35s ease 1.4s forwards}
+.bop{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:radial-gradient(900px 400px at 15% 0%,rgba(0,112,224,.08),transparent 60%),var(--surface2)}
+.bp{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:16px;align-items:stretch;margin-top:48px}
+.bpa{display:grid;place-items:center;color:var(--muted)}.bpa svg{width:24px;height:24px}
+.bpc{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:8px;transition:transform .2s ease,box-shadow .2s ease}
+.bpc:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.bpc.pp{border-color:rgba(0,112,224,.35);box-shadow:0 0 0 4px rgba(0,112,224,.06)}
+.bpc.oy{border-color:var(--accent-line)}
+.bpt{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.bpt small{font-size:12px;font-weight:650;color:var(--muted)}
+.bpt .ppbadge{font-size:17px;padding:5px 10px}
+.oyb{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:13.5px;padding:5px 10px;border-radius:8px;background:var(--accent-soft);color:var(--accent)}.oyb img{height:16px}
+.bpc h3{font-family:"Inter Tight",Inter,sans-serif;font-size:21px;font-weight:800;letter-spacing:-.02em;margin:0}
+.bpc p{margin:0 0 8px;color:var(--muted);font-size:14.5px;line-height:1.55;flex:1}
+.bpc code{display:block;font-size:11.5px;background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:6px 9px;color:var(--ink2);overflow-wrap:anywhere}
+.bpnote{display:flex;gap:10px;align-items:center;margin-top:24px;color:var(--muted);font-size:14px}.bpnote svg{width:20px;height:20px;color:var(--ok);flex:none}
+@media(max-width:960px){.bp{grid-template-columns:1fr}.bpa{transform:rotate(90deg);height:24px}}
+@media (prefers-reduced-motion:reduce){.ppappr{display:none}}
+.pill2{white-space:nowrap}

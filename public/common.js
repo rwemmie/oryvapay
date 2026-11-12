@@ -64,7 +64,7 @@ export async function header(active) {
     <a class="brand" href="/" aria-label="OryvaPay home">${brandHTML()}</a>
     <nav class="links"><a href="/app" class="${active === 'verify' ? 'on' : ''}">Verify a purchase</a><a href="/records" class="${active === 'records' ? 'on' : ''}">Intent Records</a></nav>
     <div class="spacer"></div>
-    <span class="pill hidesm ${cfg.paypalLive ? 'live' : 'demo'}"><span class="dot"></span>PayPal ${cfg.paypalLive ? esc(cfg.paypalEnv) : 'demo'}</span>
+    <span class="pill hidesm ${cfg.paypalLive ? 'live' : 'demo'}"><span class="dot"></span>Payments by PayPal (${cfg.paypalLive ? esc(cfg.paypalEnv) : 'demo'})</span>
     <span class="pill hidesm ${cfg.aiLive ? 'live' : 'demo'}"><span class="dot"></span>AI ${cfg.aiLive ? esc(cfg.aiModel) : 'demo'}</span>
     <button class="themebtn" id="themeBtn" title="Switch light or dark mode" aria-label="Switch light or dark mode">
       <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>

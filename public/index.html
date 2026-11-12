@@ -16,7 +16,7 @@
 
 <div class="snav"><div class="bar">
   <a class="brand" href="/" aria-label="OryvaPay home"><img src="/brand/mark-128.png" alt="" width="42" height="34"><span class="wm">Oryva<b>Pay</b></span></a>
-  <nav class="links"><a href="#demo">Watch demo</a><a href="#problem">Problem</a><a href="#how">How it works</a><a href="#sneaky">Sneaky charges</a><a href="#modes">Modes</a><a href="#evidence">Evidence</a></nav>
+  <nav class="links"><a href="#paypal">PayPal flow</a><a href="#demo">Watch demo</a><a href="#problem">Problem</a><a href="#how">How it works</a><a href="#sneaky">Sneaky charges</a><a href="#evidence">Evidence</a></nav>
   <div class="spacer" style="flex:1"></div>
   <button class="themebtn" id="themeBtn" title="Switch light or dark mode" aria-label="Switch light or dark mode">
     <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
@@ -29,14 +29,15 @@
   
   <div class="wrap">
     <div>
-      <span class="kicker rv" style="--i:0"><i></i>PayPal + AI for agentic commerce</span>
+      <span class="ppkick rv" style="--i:0">Built on <span class="ppbadge"><span class="ppw" aria-label="PayPal"><b>Pay</b><i>Pal</i></span></span> Orders v2 · AI verified</span>
       <h1 class="rv" style="--i:1">Verify intent<br><span class="g">before payment.</span></h1>
-      <p class="sub rv" style="--i:2">The AI verification layer that checks an agent's order against the buyer's intent before PayPal captures the money. <b>A payment can be legitimate while the purchase is wrong.</b></p>
+      <p class="sub rv" style="--i:2"><b>PayPal holds the money while OryvaPay checks the order.</b> The buyer approves a PayPal authorization, our AI compares what the agent bought with what the buyer asked for, then PayPal captures it on a match or voids it on a mismatch. A payment can be legitimate while the purchase is wrong.</p>
       <div class="ctas rv" style="--i:3">
         <a class="btn primary lg magnet" href="/app">Try the live demo <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         <a class="btn ghost lg magnet" href="#demo"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/></svg>Watch demo</a>
       </div>
-      <div class="trust rv" style="--i:4">
+      <div class="ppowered rv" style="--i:4"><span class="ppbadge"><span class="ppw" aria-label="PayPal"><b>Pay</b><i>Pal</i></span></span><span>Powered by PayPal checkout · Orders v2 and Payments v2 in the PayPal sandbox</span></div>
+      <div class="trust rv" style="--i:5">
         <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> PayPal sandbox, live</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Real AI verdicts</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Hash chained Intent Records</span>
       </div>
     </div>
@@ -62,15 +63,15 @@
       <div class="phone front"><div class="bezel"><div class="screen">
         <div class="island"></div>
         <div class="sbar"><span>9:41</span><span class="sic"><svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1.5 4.5a9.5 9.5 0 0 1 13 0M4 7.2a6 6 0 0 1 8 0"/><circle cx="8" cy="10" r="1.2" fill="currentColor" stroke="none"/></svg><svg viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="15" height="7" rx="2"/><rect x="23.5" y="4" width="2" height="4" rx="1" opacity=".45"/></svg></span></div>
-        <div class="toast"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>Authorization voided</b><small>PayPal released $87.98</small></div></div>
+        <div class="toast"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>PayPal voided the authorization</b><small>$87.98 released · nothing taken</small></div></div>
         <div class="appbar main"><img src="/brand/mark-128.png" alt=""><b>Oryva<span>Pay</span></b><span class="av">XA</span></div>
         <div class="pad">
           <div class="eyb a1">Needs verification</div>
           <div class="ttl a1">Your agent wants to pay</div>
           <div class="pc a2">
-            <div class="mrow"><span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9M4 9v11h16V9M3 9h18M9 20v-6h6v6"/></svg></span><div class="mt"><b>StrideLab</b><small>Verified · via your agent</small></div><span class="pill2 rev">Held</span></div>
+            <div class="mrow"><span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9M4 9v11h16V9M3 9h18M9 20v-6h6v6"/></svg></span><div class="mt"><b>StrideLab</b><small>via your agent</small></div><span class="pill2 pp">Held by PayPal</span></div>
             <div class="pamt">$87.98</div>
-            <small class="sub2">Authorized in PayPal · not captured</small>
+            <small class="sub2 ppline"><span class="ppbadge sm"><span class="ppw" aria-label="PayPal"><b>Pay</b><i>Pal</i></span></span> authorization · not captured</small>
           </div>
           <div class="glbl a3">You asked for</div>
           <div class="pc intent a3"><span class="typed">Running shoes, black, size 10, under $90, no extras</span><span class="caret"></span></div>
@@ -82,6 +83,7 @@
           </div>
           <div class="pscan a5"><span class="bar"><i></i></span><small>OryvaPay AI is checking each line</small></div>
         </div>
+        <div class="ppappr"><div class="ppsheet"><span class="grab"></span><div class="pph"><span class="ppbadge"><span class="ppw" aria-label="PayPal"><b>Pay</b><i>Pal</i></span></span><small>Sandbox</small></div><div class="ppamt">$87.98</div><small class="ppto">to StrideLab · authorize now, capture after verification</small><span class="ppbtn"><span class="ppw"><b>Pay</b><i>Pal</i></span> Approve</span></div></div>
         <div class="dim"></div>
         <div class="sheet">
           <span class="grab"></span>
@@ -124,6 +126,20 @@
       <div class="pbar"><span class="pdot"></span><span>OryvaPay · product walkthrough</span><span class="plen" id="pLen">Video guide</span></div>
     </div>
   </div>
+</div></section>
+
+<section class="sx bop" id="paypal"><div class="wrap">
+  <span class="ppkick rv">Built on <span class="ppbadge"><span class="ppw" aria-label="PayPal"><b>Pay</b><i>Pal</i></span></span></span>
+  <h2 class="h2 rv" style="--i:1">PayPal moves the money. OryvaPay decides if it should.</h2>
+  <p class="p-lead rv" style="--i:2">Every purchase runs through real PayPal APIs in the sandbox. The AI only decides between the two outcomes PayPal already supports: capture or void.</p>
+  <div class="bp">
+    <div class="bpc pp rv" style="--i:0"><span class="bpt"><span class="ppbadge"><span class="ppw" aria-label="PayPal"><b>Pay</b><i>Pal</i></span></span><small>Step 1</small></span><h3>PayPal authorizes</h3><p>The buyer approves with the PayPal JS SDK. Funds are held, nothing is captured yet.</p><code>POST /v2/checkout/orders</code><code>intent: AUTHORIZE</code></div>
+    <span class="bpa" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="bpc oy rv" style="--i:1"><span class="bpt"><span class="oyb"><img src="/brand/mark-128.png" alt="">OryvaPay AI</span><small>Step 2</small></span><h3>OryvaPay checks the order</h3><p>Rule checks for every number, AI review for meaning: the PayPal order lines against the buyer's own words.</p><code>GET /v2/checkout/orders/{id}</code><code>PASS · BLOCK · REVIEW</code></div>
+    <span class="bpa" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+    <div class="bpc pp rv" style="--i:2"><span class="bpt"><span class="ppbadge"><span class="ppw" aria-label="PayPal"><b>Pay</b><i>Pal</i></span></span><small>Step 3</small></span><h3>PayPal captures or voids</h3><p>A match is captured. A mismatch is voided and the hold is released. The buyer pays nothing for the wrong order.</p><code>POST /v2/payments/authorizations/{id}/capture</code><code>POST /v2/payments/authorizations/{id}/void</code></div>
+  </div>
+  <div class="bpnote rv" style="--i:3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="m9 12 2 2 4-4"/></svg>Each Intent Record keeps the PayPal order ID, authorization ID and capture ID, so the evidence lines up with the PayPal transaction.</div>
 </div></section>
 
 <section class="sx" id="problem"><div class="wrap">
@@ -262,7 +278,7 @@
     <div><h4>Built on</h4><a class="l" href="https://developer.paypal.com/docs/api/orders/v2/" target="_blank" rel="noopener">PayPal Orders v2</a><a class="l" href="https://developer.paypal.com/docs/api/payments/v2/" target="_blank" rel="noopener">PayPal Payments v2</a><a class="l" href="https://www.paypal.ai/us/agent-ready" target="_blank" rel="noopener">PayPal Agent Ready</a></div>
     <div><h4>Project</h4><a class="l" href="https://github.com/rwemmie/oryvapay" target="_blank" rel="noopener">GitHub</a><a class="l" href="https://x.com/xanianthegreat" target="_blank" rel="noopener">@xanianthegreat on X</a><a class="l" href="https://ap2-protocol.org/ap2/specification/" target="_blank" rel="noopener">AP2 specification</a></div>
   </div>
-  <div class="note"><span>© 2026 OryvaPay · Built for the PayPal AI Hackathon · MIT license</span><span>PayPal sandbox only</span></div>
+  <div class="note"><span>© 2026 OryvaPay · Built for the PayPal AI Hackathon · MIT license</span><span>PayPal sandbox only · PayPal is a trademark of PayPal, Inc. OryvaPay is an independent hackathon project.</span></div>
 </div></footer>
 
 <script type="module" src="/site.js"></script>

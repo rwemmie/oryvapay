@@ -10,7 +10,7 @@ const mq = $('#mq'); mq.innerHTML += mq.innerHTML;
 // hero verdict animation
 const stage = $('#heroVisual');
 requestAnimationFrame(() => stage.classList.add('play'));
-if (!reduce) setInterval(() => { if (document.hidden) return; stage.classList.remove('play'); void stage.offsetWidth; stage.classList.add('play'); }, 12000);
+if (!reduce) setInterval(() => { if (document.hidden) return; stage.classList.remove('play'); void stage.offsetWidth; stage.classList.add('play'); }, 14000);
 
 // scroll reveals
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const t = e.target; t.classList.add('in'); io.unobserve(t); setTimeout(() => t.classList.remove('rv', 'in'), 900 + (+getComputedStyle(t).getPropertyValue('--i') || 0) * 90); } }), { threshold: 0.14, rootMargin: '0px 0px -40px 0px' });
