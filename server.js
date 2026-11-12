@@ -74,7 +74,7 @@ app.post('/api/records/:id/order', wrap(async (req, res) => {
   if (a.orderId && a.status === 'ORDER_CREATED') return res.json({ id: a.orderId, approveUrl: a.approveUrl });
   if (a.status !== 'CART_BUILT') throw bad('This attempt already has a payment. Use Fix order to start a new attempt.');
   const origin = `${req.protocol}://${req.get('host')}`;
-  const order = await paypal.createOrder(a.cart, `${r.id}-${a.n}`, { returnUrl: `${origin}/?record=${r.id}&paypal=approved`, cancelUrl: `${origin}/?record=${r.id}&paypal=cancelled` });
+  const order = await paypal.createOrder(a.cart, `${r.id}-${a.n}`, { returnUrl: `${origin}/app?record=${r.id}&paypal=approved`, cancelUrl: `${origin}/app?record=${r.id}&paypal=cancelled` });
   const approveUrl = order.links?.find(l => l.rel === 'approve' || l.rel === 'payer-action')?.href;
   updateRecord(r.id, x => Object.assign(lastAttempt(x), { orderId: order.id, approveUrl, status: 'ORDER_CREATED' }));
   appendEvent(r.id, 'paypal_order_created', { attempt: a.n, orderId: order.id, intent: 'AUTHORIZE', amount: order.purchase_units?.[0]?.amount || null, simulated: !config.paypalLive });

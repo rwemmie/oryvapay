@@ -24,7 +24,7 @@ async function resumeFromPayPal() {
   const q = new URLSearchParams(location.search);
   const id = q.get('record');
   if (!id) return;
-  history.replaceState(null, '', '/');
+  history.replaceState(null, '', '/app');
   try {
     setRecord(await api('GET', `/api/records/${id}`));
     state.constraints = state.record.constraints; state.mode = state.record.mode;
@@ -196,7 +196,7 @@ function renderVerdict() {
   const label = { PASS: 'Verdict · Pass', BLOCK: 'Verdict · Block', NEEDS_APPROVAL: 'Verdict · Review' }[v.verdict];
   const checks = [...v.checks].sort((x, y) => ({ fail: 0, warn: 1, pass: 2 }[x.status] - { fail: 0, warn: 1, pass: 2 }[y.status]));
   let outcome = '';
-  if (a.status === 'CAPTURED') outcome = `<div class="outcome ok"><div class="txt"><b>Payment captured: ${usd(a.finalEvent?.amount?.value)}</b><div class="hint">Capture <code>${esc(a.captureId)}</code> · the Intent Record is sealed.</div></div><a class="btn ok" href="/record/${r.id}">View Intent Record</a><a class="btn ghost" href="/record/${r.id}/evidence" target="_blank">Evidence Pack</a><button class="btn ghost" onclick="location.href='/'">New purchase</button></div>`;
+  if (a.status === 'CAPTURED') outcome = `<div class="outcome ok"><div class="txt"><b>Payment captured: ${usd(a.finalEvent?.amount?.value)}</b><div class="hint">Capture <code>${esc(a.captureId)}</code> · the Intent Record is sealed.</div></div><a class="btn ok" href="/record/${r.id}">View Intent Record</a><a class="btn ghost" href="/record/${r.id}/evidence" target="_blank">Evidence Pack</a><button class="btn ghost" onclick="location.href='/app'">New purchase</button></div>`;
   else if (a.status === 'VOIDED') outcome = `<div class="outcome bad"><div class="txt"><b>Authorization voided. ${usd(a.authorization?.amount?.value)} released back to you.</b><div class="hint">Nothing was charged. Ask the agent to fix the order, then approve the corrected one.</div></div><button class="btn primary" id="fixBtn">Fix order</button><a class="btn ghost" href="/record/${r.id}/evidence" target="_blank">Evidence Pack</a></div>`;
   else if (a.status === 'AWAITING_APPROVAL') outcome = `<div class="outcome rev"><div class="txt"><b>Your call.</b><div class="hint">Funds are still only authorized. Approve to capture anyway, or reject to void.</div></div><button class="btn ok" id="apBtn">Approve and pay</button><button class="btn bad" id="rjBtn">Reject and void</button></div>`;
 

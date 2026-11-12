@@ -62,7 +62,7 @@ export async function header(active) {
   el.className = 'top';
   el.innerHTML = `<div class="wrap">
     <a class="brand" href="/" aria-label="OryvaPay home">${brandHTML()}</a>
-    <nav class="links"><a href="/" class="${active === 'verify' ? 'on' : ''}">Verify a purchase</a><a href="/records" class="${active === 'records' ? 'on' : ''}">Intent Records</a></nav>
+    <nav class="links"><a href="/app" class="${active === 'verify' ? 'on' : ''}">Verify a purchase</a><a href="/records" class="${active === 'records' ? 'on' : ''}">Intent Records</a></nav>
     <div class="spacer"></div>
     <span class="pill hidesm ${cfg.paypalLive ? 'live' : 'demo'}"><span class="dot"></span>PayPal ${cfg.paypalLive ? esc(cfg.paypalEnv) : 'demo'}</span>
     <span class="pill hidesm ${cfg.aiLive ? 'live' : 'demo'}"><span class="dot"></span>AI ${cfg.aiLive ? esc(cfg.aiModel) : 'demo'}</span>

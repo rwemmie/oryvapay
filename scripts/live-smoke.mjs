@@ -14,4 +14,4 @@ let authErr = '';
 try { await call('POST', `/api/records/${rec.id}/authorize`); } catch (e) { authErr = e.message; }
 console.log(authErr.includes('not yet approved') ? 'PASS  PayPal refuses to authorize before buyer approval (as expected)' : `INFO  ${authErr || 'authorized?'}`);
 console.log(`Approve here as the sandbox buyer: ${order.approveUrl}`);
-console.log(`It returns to ${BASE}/?record=${rec.id}&paypal=approved and OryvaPay continues automatically.`);
+console.log(`It returns to ${BASE}/app?record=${rec.id}&paypal=approved and OryvaPay continues automatically.`);
