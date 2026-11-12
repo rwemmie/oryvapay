@@ -8,7 +8,9 @@ $('#themeBtn').addEventListener('click', () => setTheme(document.documentElement
 const mq = $('#mq'); mq.innerHTML += mq.innerHTML;
 
 // hero verdict animation
-requestAnimationFrame(() => $('#heroVisual').classList.add('play'));
+const stage = $('#heroVisual');
+requestAnimationFrame(() => stage.classList.add('play'));
+if (!reduce) setInterval(() => { if (document.hidden) return; stage.classList.remove('play'); void stage.offsetWidth; stage.classList.add('play'); }, 12000);
 
 // scroll reveals
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { const t = e.target; t.classList.add('in'); io.unobserve(t); setTimeout(() => t.classList.remove('rv', 'in'), 900 + (+getComputedStyle(t).getPropertyValue('--i') || 0) * 90); } }), { threshold: 0.14, rootMargin: '0px 0px -40px 0px' });
@@ -39,9 +41,9 @@ $$('[data-count]').forEach(el => {
 
 // modes tabs
 const MODES = {
-  strict: ['BLOCK', '✕', 'Blocked · authorization voided', 'Price is $4.00 over your $350 budget. Strict mode allows no difference.'],
-  flex: ['PASS', '✓', 'Passed · payment captured', '$4.00 over budget is within the small difference Flexible mode tolerates.'],
-  approval: ['REVIEW', '?', 'Waiting for you', 'The price moved $4.00 above budget. Approve to capture, or decline to void.'],
+  strict: ['BLOCK', '✕', 'Blocked · authorization voided', 'The price rose $5.00 after you approved. Strict mode allows no difference.'],
+  flex: ['PASS', '✓', 'Passed · payment captured', 'A $5.00 change is within the $5.00 tolerance you set in Flexible mode.'],
+  approval: ['REVIEW', '?', 'Waiting for you', 'The price rose $5.00. Approve to capture, or decline to void.'],
 };
 function showMode(m) {
   $$('#mtabs .mtab').forEach(b => b.classList.toggle('on', b.dataset.m === m));
@@ -58,6 +60,5 @@ if (!reduce && matchMedia('(pointer:fine)').matches) {
     b.addEventListener('pointerleave', () => { b.style.transform = ''; });
   });
   // subtle parallax on hero photo
-  const img = $('#parallax'); let ticking = false;
-  addEventListener('scroll', () => { if (ticking) return; ticking = true; requestAnimationFrame(() => { const y = Math.min(scrollY, 800); img.style.transform = `scale(1.06) translateY(${y * 0.06}px)`; ticking = false; }); }, { passive: true });
+  
 }

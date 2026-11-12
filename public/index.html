@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0a0a0b">
 <link rel="icon" href="/favicon.png" type="image/png"><link rel="apple-touch-icon" href="/brand/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&family=Inter+Tight:wght@600;700;800;900&family=Poppins:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/site.css">
 <title>OryvaPay · Verify intent before payment</title>
 <meta name="description" content="The AI verification layer that checks an agent's order against the buyer's intent before PayPal captures the money.">
@@ -26,7 +26,7 @@
 </div></div>
 
 <section class="hero2">
-  <div class="gridbg"></div><div class="glow a"></div><div class="glow b"></div>
+  
   <div class="wrap">
     <div>
       <span class="kicker rv" style="--i:0"><i></i>PayPal + AI for agentic commerce</span>
@@ -40,22 +40,64 @@
         <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> PayPal sandbox, live</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Real AI verdicts</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Hash chained Intent Records</span>
       </div>
     </div>
-    <div class="visual" id="heroVisual">
-      <div class="photo"><img src="/img/hero-phone.webp" alt="Shopper approving a purchase on a phone" id="parallax"></div>
-      <div class="vcard">
-        <div class="top"><img src="/brand/mark-128.png" alt=""><span class="t">Verifying order</span><span class="live">PayPal authorized</span></div>
-        <div class="req"><b>BUYER ASKED FOR</b>Sony WH-1000XM5 headphones, black, under $400, no extras</div>
-        <div class="lines">
-          <div class="vl"><span>Sony WH-1000XM5 · Black</span><span class="r">$348.00 <span class="ok">MATCH</span></span></div>
-          <div class="vl"><span>Standard shipping</span><span class="r">$0.00 <span class="ok">MATCH</span></span></div>
-          <div class="vl flag"><span>2 year Protection Plan</span><span class="r">$49.99 <span class="ok">MATCH</span><span class="bad">NOT ASKED</span></span></div>
-          <div class="vl"><span>Total authorized</span><span class="r"><b>$397.99</b></span></div>
+    <div class="stage" id="heroVisual">
+      <div class="halo"></div>
+      <div class="phone back" aria-hidden="true"><div class="bezel"><div class="screen">
+        <div class="island"></div>
+        <div class="sbar"><span>9:41</span><span class="sic"><svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="15" height="7" rx="2"/><rect x="23.5" y="4" width="2" height="4" rx="1" opacity=".45"/></svg></span></div>
+        <div class="appbar"><span class="back-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></span><b>Intent Record</b></div>
+        <div class="pad">
+          <div class="rid">IR-20261112-7F3A <span class="pill2 ok">Sealed</span></div>
+          <div class="tl">
+            <div class="tli"><span class="td"></span><div><b>Request recorded</b><small>Running shoes, size 10, no extras</small></div></div>
+            <div class="tli"><span class="td"></span><div><b>PayPal authorized</b><small>$87.98 held</small></div></div>
+            <div class="tli bad"><span class="td"></span><div><b>Blocked by OryvaPay</b><small>Protection Plan not requested</small></div></div>
+            <div class="tli"><span class="td"></span><div><b>Authorization voided</b><small>$0.00 taken</small></div></div>
+            <div class="tli ok"><span class="td"></span><div><b>Corrected order captured</b><small>$74.99 · chain verified</small></div></div>
+          </div>
+          <div class="hashbox"><small>Head hash</small><code>5c08e4…a930d1</code></div>
         </div>
-        <div class="stamp"><span class="x">✕</span><div><b>BLOCKED · authorization voided</b><span>You said no extras. The agent added a warranty you never asked for.</span></div></div>
-      </div>
-      <span class="chip2 c1"><span class="d"></span>Add-on warranty caught</span>
-      <span class="chip2 c2"><span class="d"></span>$0.00 charged</span>
-      <span class="chip2 c3"><span class="d"></span>Intent Record sealed</span>
+      </div></div></div>
+
+      <div class="phone front"><div class="bezel"><div class="screen">
+        <div class="island"></div>
+        <div class="sbar"><span>9:41</span><span class="sic"><svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg><svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1.5 4.5a9.5 9.5 0 0 1 13 0M4 7.2a6 6 0 0 1 8 0"/><circle cx="8" cy="10" r="1.2" fill="currentColor" stroke="none"/></svg><svg viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.5" y="2.5" width="15" height="7" rx="2"/><rect x="23.5" y="4" width="2" height="4" rx="1" opacity=".45"/></svg></span></div>
+        <div class="toast"><span class="tic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><div><b>Authorization voided</b><small>PayPal released $87.98</small></div></div>
+        <div class="appbar main"><img src="/brand/mark-128.png" alt=""><b>Oryva<span>Pay</span></b><span class="av">XA</span></div>
+        <div class="pad">
+          <div class="eyb a1">Needs verification</div>
+          <div class="ttl a1">Your agent wants to pay</div>
+          <div class="pc a2">
+            <div class="mrow"><span class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9M4 9v11h16V9M3 9h18M9 20v-6h6v6"/></svg></span><div class="mt"><b>StrideLab</b><small>Verified · via your agent</small></div><span class="pill2 rev">Held</span></div>
+            <div class="pamt">$87.98</div>
+            <small class="sub2">Authorized in PayPal · not captured</small>
+          </div>
+          <div class="glbl a3">You asked for</div>
+          <div class="pc intent a3"><span class="typed">Running shoes, black, size 10, under $90, no extras</span><span class="caret"></span></div>
+          <div class="glbl a4">Order lines</div>
+          <div class="pc list a4">
+            <div class="pli"><span class="lic ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="lt">Aero Runner · Black · 10</span><b>$74.99</b></div>
+            <div class="pli"><span class="lic ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="lt">Standard shipping</span><b>$0.00</b></div>
+            <div class="pli flagged"><span class="lic ok swap"><svg class="i1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><svg class="i2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span><span class="lt">2 year Protection Plan<small class="why2">Not in your request</small></span><b>$12.99</b></div>
+          </div>
+          <div class="pscan a5"><span class="bar"><i></i></span><small>OryvaPay AI is checking each line</small></div>
+        </div>
+        <div class="dim"></div>
+        <div class="sheet">
+          <span class="grab"></span>
+          <div class="sh"><span class="stile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/></svg></span><div><b>Payment blocked</b><span class="zero">$0.00 taken</span></div></div>
+          <p>Your agent added a $12.99 Protection Plan. You said no extras, so OryvaPay voided the authorization.</p>
+          <div class="sbtns"><span class="b1">Fix order</span><span class="b2">View Intent Record</span></div>
+        </div>
+        <div class="tabbar">
+          <span class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0"/></svg>Orders</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="m9 12 2 2 4-4"/></svg>Records</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</span>
+          <i class="homeind"></i>
+        </div>
+        <div class="glare"></div>
+      </div></div></div>
     </div>
   </div>
 </section>
@@ -97,14 +139,14 @@
   <h2 class="h2 rv" style="--i:1">The things that slip into a checkout. Caught before capture.</h2>
   <p class="p-lead rv" style="--i:2">Spend caps and allowlists stop the wrong payee. They do not notice a valid merchant adding a warranty, a membership or a fee you never agreed to.</p>
   <div class="sg">
-    <div class="sc feat rv" style="--i:0"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></div><h3>Add-on warranties</h3><p>Protection plans and extras you never asked for.</p><span class="ex">+ $49.99 Protection Plan</span></div>
+    <div class="sc feat rv" style="--i:0"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg></div><h3>Add-on warranties</h3><p>Protection plans and extras you never asked for.</p><span class="ex">+ $12.99 Protection Plan</span></div>
     <div class="sc rv" style="--i:1"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8M21 3v5h-5"/></svg></div><h3>Surprise subscriptions</h3><p>A one time buy that quietly becomes monthly.</p><span class="ex">$9.99 / month</span></div>
     <div class="sc rv" style="--i:2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4zM8 9h8M8 13h5"/></svg></div><h3>Hidden service fees</h3><p>Handling, service and convenience fees in the fine print.</p><span class="ex">+ $14.00 service fee</span></div>
-    <div class="sc rv" style="--i:3"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg></div><h3>Price changed after approval</h3><p>The total moved between the quote and the checkout.</p><span class="ex">$348 became $379</span></div>
+    <div class="sc rv" style="--i:3"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></svg></div><h3>Price changed after approval</h3><p>The total moved between the quote and the checkout.</p><span class="ex">$74.99 became $79.99</span></div>
     <div class="sc rv" style="--i:0"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5v14"/></svg></div><h3>Wrong quantity</h3><p>Two pairs when you asked for one.</p><span class="ex">qty 2, asked 1</span></div>
-    <div class="sc rv" style="--i:1"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5M4 9v11h16V9M9 20v-6h6v6"/></svg></div><h3>Look-alike merchants</h3><p>A store you did not choose, or one that only looks right.</p><span class="ex">sony-outlet-deals</span></div>
+    <div class="sc rv" style="--i:1"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5M4 9v11h16V9M9 20v-6h6v6"/></svg></div><h3>Look-alike merchants</h3><p>A store you did not choose, or one that only looks right.</p><span class="ex">str1delab-outlet.shop</span></div>
     <div class="sc rv" style="--i:2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h3>Delivery terms</h3><p>Arrives after the date you needed it.</p><span class="ex">needed Fri, arrives Tue</span></div>
-    <div class="sc rv" style="--i:3"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Over budget</h3><p>The total breaks the limit you set.</p><span class="ex">$412 over $400</span></div>
+    <div class="sc rv" style="--i:3"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3>Over budget</h3><p>The total breaks the limit you set.</p><span class="ex">$96.40 over $90</span></div>
   </div>
 </div></section>
 
@@ -118,9 +160,9 @@
       <button class="mtab" data-m="approval"><b><i style="background:var(--rev)"></i>Approval</b><span>AI flags the difference and asks you.</span></button>
     </div>
     <div class="mpanel rv" style="--i:3">
-      <div class="hint" style="margin:0 0 12px">Example: you set a $350 budget, the price moved by $6 at checkout.</div>
-      <div class="row2"><span>Sony WH-1000XM5 · Black</span><b>$354.00</b></div>
-      <div class="row2"><span>Approved budget</span><b>$350.00</b></div>
+      <div class="hint" style="margin:0 0 12px">Example: the agent quoted $74.99, then the price moved to $79.99 at checkout.</div>
+      <div class="row2"><span>Aero Runner · Black · 10</span><b>$79.99</b></div>
+      <div class="row2"><span>Price you approved</span><b>$74.99</b></div>
       <div id="mres"></div>
     </div>
   </div>
@@ -141,11 +183,11 @@
     </div>
     <div class="rv" style="--i:2"><div class="paper">
       <div class="ph"><img src="/brand/mark-128.png" alt=""><span>Oryva<b>Pay</b></span><span style="margin-left:auto;font-size:11px;color:#6b7280;font-family:Inter">Dispute Evidence Pack</span></div>
-      <h4>Intent Record ir_8c41f2</h4>
-      <div class="pr"><span>Buyer asked for</span><span>Sony WH-1000XM5, black, under $400, no extras</span></div>
+      <h4>Intent Record IR-20261112-7F3A</h4>
+      <div class="pr"><span>Buyer asked for</span><span>Running shoes, black, size 10, under $90, no extras</span></div>
       <div class="pr"><span>PayPal order</span><span>5O190127TN364715T</span></div>
-      <div class="pr badp"><span>Attempt 1</span><span>Blocked · Protection Plan $49.99 not requested</span></div>
-      <div class="pr"><span>Attempt 2</span><span>Passed · captured $348.00</span></div>
+      <div class="pr badp"><span>Attempt 1</span><span>Blocked · Protection Plan $12.99 not requested</span></div>
+      <div class="pr"><span>Attempt 2</span><span>Passed · captured $74.99</span></div>
       <div class="pr"><span>Hash chain</span><span>9 events · intact</span></div>
       <span class="seal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> Chain verified</span>
     </div></div>
